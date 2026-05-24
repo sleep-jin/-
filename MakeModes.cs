@@ -276,7 +276,7 @@ namespace 发票
                 return;
             }
 
-            string baseDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Templates", FileName);
+            string baseDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Templates\\PDF", FileName);
             Directory.CreateDirectory(baseDir);
 
             var config = new TemplateConfig();
@@ -352,7 +352,7 @@ namespace 发票
         }
         private void MakeModes_Load(object sender, EventArgs e)
         {
-            string baseDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Templates", FileName);
+            string baseDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Templates\\PDF", FileName);
             string configPath = Path.Combine(baseDir, $"{FileName}.json");
 
             if (!File.Exists(configPath))

@@ -10,6 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="MakeXMLMode.resx" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="EPPlus" Version="8.5.4" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="OpenCvSharp4.Extensions" Version="4.13.0.20260427" />

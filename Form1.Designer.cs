@@ -64,6 +64,11 @@ namespace 发票
             Column2 = new DataGridViewTextBoxColumn();
             Column3 = new DataGridViewTextBoxColumn();
             checkBox1 = new CheckBox();
+            FileClass = new Sunny.UI.UIComboBox();
+            label6 = new Label();
+            ModeName = new Sunny.UI.UIComboBox();
+            label7 = new Label();
+            LoadTemplate = new Sunny.UI.UIButton();
             ((System.ComponentModel.ISupportInitialize)PDFdata).BeginInit();
             SuspendLayout();
             // 
@@ -84,7 +89,7 @@ namespace 发票
             // MakeMode
             // 
             MakeMode.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            MakeMode.Location = new Point(14, 124);
+            MakeMode.Location = new Point(14, 168);
             MakeMode.Margin = new Padding(5, 4, 5, 4);
             MakeMode.MinimumSize = new Size(1, 1);
             MakeMode.Name = "MakeMode";
@@ -98,7 +103,7 @@ namespace 发票
             // 编辑分类
             // 
             编辑分类.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            编辑分类.Location = new Point(14, 483);
+            编辑分类.Location = new Point(14, 527);
             编辑分类.Margin = new Padding(5, 4, 5, 4);
             编辑分类.MinimumSize = new Size(1, 1);
             编辑分类.Name = "编辑分类";
@@ -112,7 +117,7 @@ namespace 发票
             // Start
             // 
             Start.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            Start.Location = new Point(495, 120);
+            Start.Location = new Point(473, 168);
             Start.Margin = new Padding(5, 4, 5, 4);
             Start.MinimumSize = new Size(1, 1);
             Start.Name = "Start";
@@ -125,7 +130,7 @@ namespace 发票
             // txtFomatbox
             // 
             txtFomatbox.Font = new Font("宋体", 10.5F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            txtFomatbox.Location = new Point(275, 159);
+            txtFomatbox.Location = new Point(275, 203);
             txtFomatbox.Margin = new Padding(5, 4, 5, 4);
             txtFomatbox.MinimumSize = new Size(1, 16);
             txtFomatbox.Name = "txtFomatbox";
@@ -140,7 +145,7 @@ namespace 发票
             // setTXTFomat
             // 
             setTXTFomat.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            setTXTFomat.Location = new Point(167, 236);
+            setTXTFomat.Location = new Point(167, 280);
             setTXTFomat.Margin = new Padding(5, 4, 5, 4);
             setTXTFomat.MinimumSize = new Size(1, 1);
             setTXTFomat.Name = "setTXTFomat";
@@ -154,7 +159,7 @@ namespace 发票
             // testMode
             // 
             testMode.AutoSize = true;
-            testMode.Location = new Point(178, 120);
+            testMode.Location = new Point(284, 279);
             testMode.Name = "testMode";
             testMode.Size = new Size(132, 28);
             testMode.TabIndex = 14;
@@ -164,7 +169,7 @@ namespace 发票
             // outPDF
             // 
             outPDF.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            outPDF.Location = new Point(167, 484);
+            outPDF.Location = new Point(320, 168);
             outPDF.Margin = new Padding(5, 4, 5, 4);
             outPDF.MinimumSize = new Size(1, 1);
             outPDF.Name = "outPDF";
@@ -178,7 +183,7 @@ namespace 发票
             // button4
             // 
             button4.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            button4.Location = new Point(495, 484);
+            button4.Location = new Point(167, 168);
             button4.Margin = new Padding(5, 4, 5, 4);
             button4.MinimumSize = new Size(1, 1);
             button4.Name = "button4";
@@ -206,7 +211,7 @@ namespace 发票
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(422, 236);
+            label1.Location = new Point(422, 280);
             label1.Name = "label1";
             label1.Size = new Size(226, 24);
             label1.TabIndex = 19;
@@ -215,7 +220,7 @@ namespace 发票
             // PDFfomat
             // 
             PDFfomat.Font = new Font("宋体", 10.5F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            PDFfomat.Location = new Point(275, 197);
+            PDFfomat.Location = new Point(275, 241);
             PDFfomat.Margin = new Padding(5, 4, 5, 4);
             PDFfomat.MinimumSize = new Size(1, 16);
             PDFfomat.Name = "PDFfomat";
@@ -231,7 +236,7 @@ namespace 发票
             // 
             label2.AutoSize = true;
             label2.Font = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            label2.Location = new Point(164, 165);
+            label2.Location = new Point(164, 209);
             label2.Name = "label2";
             label2.Size = new Size(98, 18);
             label2.TabIndex = 21;
@@ -241,7 +246,7 @@ namespace 发票
             // 
             label3.AutoSize = true;
             label3.Font = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            label3.Location = new Point(167, 199);
+            label3.Location = new Point(167, 243);
             label3.Name = "label3";
             label3.Size = new Size(89, 18);
             label3.TabIndex = 22;
@@ -250,7 +255,7 @@ namespace 发票
             // textBox3
             // 
             textBox3.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            textBox3.Location = new Point(14, 533);
+            textBox3.Location = new Point(14, 577);
             textBox3.Margin = new Padding(5, 4, 5, 4);
             textBox3.MinimumSize = new Size(1, 16);
             textBox3.Name = "textBox3";
@@ -266,7 +271,7 @@ namespace 发票
             // textBox4
             // 
             textBox4.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            textBox4.Location = new Point(14, 571);
+            textBox4.Location = new Point(14, 615);
             textBox4.Margin = new Padding(5, 4, 5, 4);
             textBox4.MinimumSize = new Size(1, 16);
             textBox4.Name = "textBox4";
@@ -282,7 +287,7 @@ namespace 发票
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(395, 539);
+            label4.Location = new Point(395, 583);
             label4.Name = "label4";
             label4.Size = new Size(166, 24);
             label4.TabIndex = 25;
@@ -291,7 +296,7 @@ namespace 发票
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(385, 571);
+            label5.Location = new Point(385, 615);
             label5.Name = "label5";
             label5.Size = new Size(202, 24);
             label5.TabIndex = 26;
@@ -299,7 +304,7 @@ namespace 发票
             // 
             // progressBar1
             // 
-            progressBar1.Location = new Point(14, 616);
+            progressBar1.Location = new Point(14, 660);
             progressBar1.Name = "progressBar1";
             progressBar1.Size = new Size(471, 25);
             progressBar1.TabIndex = 27;
@@ -307,7 +312,7 @@ namespace 发票
             // lblProgress
             // 
             lblProgress.AutoSize = true;
-            lblProgress.Location = new Point(495, 618);
+            lblProgress.Location = new Point(495, 662);
             lblProgress.Name = "lblProgress";
             lblProgress.Size = new Size(70, 24);
             lblProgress.TabIndex = 28;
@@ -318,7 +323,7 @@ namespace 发票
             Modlechoose.ActiveText = "高精度模型";
             Modlechoose.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point, 134);
             Modlechoose.InActiveText = "标准模型";
-            Modlechoose.Location = new Point(14, 661);
+            Modlechoose.Location = new Point(14, 705);
             Modlechoose.MinimumSize = new Size(1, 1);
             Modlechoose.Name = "Modlechoose";
             Modlechoose.Size = new Size(171, 44);
@@ -328,7 +333,7 @@ namespace 发票
             // showFomat
             // 
             showFomat.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            showFomat.Location = new Point(167, 269);
+            showFomat.Location = new Point(167, 313);
             showFomat.Margin = new Padding(4, 5, 4, 5);
             showFomat.MinimumSize = new Size(1, 16);
             showFomat.Multiline = true;
@@ -346,7 +351,7 @@ namespace 发票
             listBox1.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point, 134);
             listBox1.HoverColor = Color.FromArgb(155, 200, 255);
             listBox1.ItemSelectForeColor = Color.White;
-            listBox1.Location = new Point(14, 165);
+            listBox1.Location = new Point(14, 209);
             listBox1.Margin = new Padding(4, 5, 4, 5);
             listBox1.MinimumSize = new Size(1, 1);
             listBox1.Name = "listBox1";
@@ -460,7 +465,7 @@ namespace 发票
             checkBox1.AutoSize = true;
             checkBox1.Checked = true;
             checkBox1.CheckState = CheckState.Checked;
-            checkBox1.Location = new Point(332, 488);
+            checkBox1.Location = new Point(506, 532);
             checkBox1.Name = "checkBox1";
             checkBox1.Size = new Size(132, 28);
             checkBox1.TabIndex = 35;
@@ -468,10 +473,88 @@ namespace 发票
             checkBox1.UseVisualStyleBackColor = true;
             checkBox1.CheckedChanged += checkBox1_CheckedChanged;
             // 
+            // FileClass
+            // 
+            FileClass.DataSource = null;
+            FileClass.FillColor = Color.White;
+            FileClass.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point, 134);
+            FileClass.ItemHoverColor = Color.FromArgb(155, 200, 255);
+            FileClass.Items.AddRange(new object[] { "PDF", "XML" });
+            FileClass.ItemSelectForeColor = Color.FromArgb(235, 243, 255);
+            FileClass.Location = new Point(127, 122);
+            FileClass.Margin = new Padding(4, 5, 4, 5);
+            FileClass.MinimumSize = new Size(63, 0);
+            FileClass.Name = "FileClass";
+            FileClass.Padding = new Padding(0, 0, 30, 2);
+            FileClass.Size = new Size(111, 30);
+            FileClass.SymbolSize = 24;
+            FileClass.TabIndex = 36;
+            FileClass.Text = "PDF";
+            FileClass.TextAlignment = ContentAlignment.MiddleLeft;
+            FileClass.Watermark = "";
+            FileClass.SelectedIndexChanged += FileClass_SelectedIndexChanged;
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Location = new Point(14, 128);
+            label6.Name = "label6";
+            label6.Size = new Size(106, 24);
+            label6.TabIndex = 37;
+            label6.Text = "文件类型";
+            // 
+            // ModeName
+            // 
+            ModeName.DataSource = null;
+            ModeName.FillColor = Color.White;
+            ModeName.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point, 134);
+            ModeName.ItemHoverColor = Color.FromArgb(155, 200, 255);
+            ModeName.Items.AddRange(new object[] { "发票" });
+            ModeName.ItemSelectForeColor = Color.FromArgb(235, 243, 255);
+            ModeName.Location = new Point(374, 122);
+            ModeName.Margin = new Padding(4, 5, 4, 5);
+            ModeName.MinimumSize = new Size(63, 0);
+            ModeName.Name = "ModeName";
+            ModeName.Padding = new Padding(0, 0, 30, 2);
+            ModeName.Size = new Size(111, 30);
+            ModeName.SymbolSize = 24;
+            ModeName.TabIndex = 37;
+            ModeName.Text = "发票";
+            ModeName.TextAlignment = ContentAlignment.MiddleLeft;
+            ModeName.Watermark = "";
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Location = new Point(261, 128);
+            label7.Name = "label7";
+            label7.Size = new Size(106, 24);
+            label7.TabIndex = 38;
+            label7.Text = "模板名称";
+            // 
+            // LoadTemplate
+            // 
+            LoadTemplate.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point, 134);
+            LoadTemplate.Location = new Point(167, 529);
+            LoadTemplate.Margin = new Padding(5, 4, 5, 4);
+            LoadTemplate.MinimumSize = new Size(1, 1);
+            LoadTemplate.Name = "LoadTemplate";
+            LoadTemplate.Radius = 15;
+            LoadTemplate.Size = new Size(143, 33);
+            LoadTemplate.TabIndex = 40;
+            LoadTemplate.Text = "加载模板";
+            LoadTemplate.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point, 134);
+            LoadTemplate.Click += LoadTemplate_Click;
+            // 
             // Form1
             // 
             AutoScaleMode = AutoScaleMode.None;
-            ClientSize = new Size(1197, 713);
+            ClientSize = new Size(1197, 840);
+            Controls.Add(LoadTemplate);
+            Controls.Add(label7);
+            Controls.Add(ModeName);
+            Controls.Add(label6);
+            Controls.Add(FileClass);
             Controls.Add(checkBox1);
             Controls.Add(PDFdata);
             Controls.Add(Button2);
@@ -542,5 +625,10 @@ namespace 发票
         private DataGridViewTextBoxColumn Column1;
         private DataGridViewTextBoxColumn Column2;
         private DataGridViewTextBoxColumn Column3;
+        private Sunny.UI.UIComboBox FileClass;
+        private Label label6;
+        private Sunny.UI.UIComboBox ModeName;
+        private Label label7;
+        private Sunny.UI.UIButton LoadTemplate;
     }
 }

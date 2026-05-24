@@ -1,5 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_LastSelectedProfileId>C:\Users\sleep\Desktop\发票报销单处理\Properties\PublishProfiles\ClickOnceProfile.pubxml</_LastSelectedProfileId>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Update="ExcelShow.cs">
       <SubType>Form</SubType>
@@ -10,8 +13,16 @@
     <Compile Update="MakeModes.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="MakeXMLMode.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="ZoomImageBox.cs">
       <SubType>Component</SubType>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="MakeXMLMode.resx">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
 </Project>

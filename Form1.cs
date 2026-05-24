@@ -1,18 +1,22 @@
 using OfficeOpenXml;
 using OpenCvSharp;
+using OpenCvSharp.Aruco;
 using OpenCvSharp.Extensions;
+using Spire.Pdf.Fields;
 using Spire.Pdf.Graphics;
+using Sunny.UI;
 using System.ComponentModel;
 using System.Drawing.Imaging;
 using System.Text;
-using System.Threading.Tasks;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using UglyToad.PdfPig.DocumentLayoutAnalysis.WordExtractor;
-using Rectangle = System.Drawing.Rectangle;
-using MessageBox = System.Windows.Forms.MessageBox;
-using Sunny.UI;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Xml.Linq;
+using System.Xml.XPath;
+using UglyToad.PdfPig.DocumentLayoutAnalysis.WordExtractor;
+using MessageBox = System.Windows.Forms.MessageBox;
+using Rectangle = System.Drawing.Rectangle;
 
 namespace 发票
 {
@@ -21,16 +25,17 @@ namespace 发票
         // ========== 百度 OCR 配置 ==========
         // 服务层
         private OcrService? _ocrService;
-        private readonly TemplateService _templateService;
+        private TemplateService _templateService;
         private readonly FileExportService _exportService;
         private string _lastApiKey = "";
         private string _lastApiSecret = "";
-        private Dictionary<string, List<TemplateItem>> classtemp = new Dictionary<string, List<TemplateItem>>();
+        private Dictionary<string, List<TemplateItem>> PDFclasstemp = new Dictionary<string, List<TemplateItem>>();
+        private Dictionary<string, List<XMLTemplateItem>> XMLclasstemp = new Dictionary<string, List<XMLTemplateItem>>();
+        string TemplatePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Templates");
 
         public Form1()
         {
             InitializeComponent();
-            _templateService = new TemplateService(templatesDir);
             _exportService = new FileExportService();
             // _ocrService 将在 Start_Click 时根据 textBox3/textBox4 初始化
 
@@ -94,7 +99,7 @@ namespace 发票
                 FileInfo[] files = info.GetFiles();
                 foreach (FileInfo file in files)
                 {
-                    if (!file.Extension.Equals(".pdf", StringComparison.OrdinalIgnoreCase))
+                    if (!file.Extension.Equals(".pdf", StringComparison.OrdinalIgnoreCase) && !file.Extension.Equals(".xml", StringComparison.OrdinalIgnoreCase))
                         continue;
                     PDFdata.Rows.Add(Path.GetFileName(file.FullName), file.FullName, "1");
                 }
@@ -135,26 +140,35 @@ namespace 发票
 
         private void MakeMode_Click(object sender, EventArgs e)
         {
-            if (PDFdata.Rows.Count == 0 || listBox1.SelectedIndex < 0) return;
+            if (FileClass.Text == "PDF")
+            {
+                if (PDFdata.Rows.Count == 0 || listBox1.SelectedIndex < 0) return;
 
-            string? pdfPath = PDFdata.CurrentRow?.Cells[1].Value?.ToString();
-            string? className = listBox1.SelectedItem?.ToString();
-            if (string.IsNullOrEmpty(pdfPath) || string.IsNullOrEmpty(className)) return;
+                string? pdfPath = PDFdata.CurrentRow?.Cells[1].Value?.ToString();
+                string? className = listBox1.SelectedItem?.ToString();
+                if (string.IsNullOrEmpty(pdfPath) || string.IsNullOrEmpty(className)) return;
 
-            using var pdf = new Spire.Pdf.PdfDocument();
-            pdf.LoadFromFile(pdfPath);
-            Image image = pdf.SaveAsImage(0, PdfImageType.Bitmap, 600, 600);
-            MakeModes modes = new MakeModes(image, className);
-            modes.ShowDialog();
-            classtemp = _templateService.LoadAll();//重新载入模板
+                using var pdf = new Spire.Pdf.PdfDocument();
+                pdf.LoadFromFile(pdfPath);
+                Image image = pdf.SaveAsImage(0, PdfImageType.Bitmap, 600, 600);
+                MakeModes modes = new MakeModes(image, className);
+                modes.ShowDialog();
+                PDFclasstemp = _templateService.LoadPDFTempleta();//重新载入模板
+            }
+            if (FileClass.Text == "XML")
+            {
+                string? XMLpath = PDFdata.CurrentRow?.Cells[1].Value?.ToString();
+                string? className = listBox1.SelectedItem?.ToString();
+                MakeXMLMode xMLMode = new MakeXMLMode(XMLpath, className, TemplatePath);
+                xMLMode.ShowDialog();
+            }
         }
 
-        private string templatesDir = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Templates");
         private void 编辑分类_Click(object sender, EventArgs e)
         {
-            if (!Directory.Exists(templatesDir))
+            if (!Directory.Exists(TemplatePath))
             {
-                Directory.CreateDirectory(templatesDir);
+                Directory.CreateDirectory(TemplatePath);
             }
 
             using (var form = new Form())
@@ -182,7 +196,7 @@ namespace 发票
                     string newName = ShowInputDialog("请输入新分类名称:", "添加分类", "");
                     if (string.IsNullOrWhiteSpace(newName)) return;
 
-                    string newDir = System.IO.Path.Combine(templatesDir, newName);
+                    string newDir = System.IO.Path.Combine(TemplatePath, newName);
                     if (Directory.Exists(newDir))
                     {
                         MessageBox.Show("该分类已存在！", "错误");
@@ -213,8 +227,8 @@ namespace 发票
                     string newName = ShowInputDialog($"将 [{oldName}] 重命名为:", "重命名分类", oldName);
                     if (string.IsNullOrWhiteSpace(newName) || newName == oldName) return;
 
-                    string oldDir = System.IO.Path.Combine(templatesDir, oldName);
-                    string newDir = System.IO.Path.Combine(templatesDir, newName);
+                    string oldDir = System.IO.Path.Combine(TemplatePath, oldName);
+                    string newDir = System.IO.Path.Combine(TemplatePath, newName);
 
                     if (Directory.Exists(newDir))
                     {
@@ -256,7 +270,7 @@ namespace 发票
                         return;
                     }
 
-                    string dir = System.IO.Path.Combine(templatesDir, selectedName);
+                    string dir = System.IO.Path.Combine(TemplatePath, selectedName);
                     try
                     {
                         Directory.Delete(dir, true);
@@ -286,12 +300,10 @@ namespace 发票
         private void RefreshListBox(UIListBox listBox)
         {
             listBox.Items.Clear();
-            classtemp.Clear();
-            foreach (var folder in Directory.GetDirectories(templatesDir))
+            foreach (var folder in Directory.GetDirectories(TemplatePath))
             {
                 string folderName = System.IO.Path.GetFileName(folder);
                 listBox.Items.Add(folderName);
-                classtemp.Add(folderName, new List<TemplateItem>());
             }
         }
 
@@ -318,196 +330,195 @@ namespace 发票
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            RefreshListBox(listBox1);
-            if (File.Exists(excelConfigPath))
-            {
-                string[] stringps = File.ReadAllLines(excelConfigPath);
-
-                for (int i = 0; i < listBox1.Items.Count; i++)//读取表格格式
-                {
-                    try
-                    {
-                        string? itemText = listBox1.Items[i]?.ToString();
-                        if (itemText == null) continue;
-                        string? line = stringps.FirstOrDefault(s => s.Contains(itemText));
-                        if (line == null) throw new InvalidOperationException();
-                        string[] str = line.Split(':');
-                        ExcelFormat.Add(str[0], str[1]);
-                    }
-                    catch
-                    {
-                        string? itemText = listBox1.Items[i]?.ToString();
-                        if (itemText != null)
-                            ExcelFormat.Add(itemText, "");
-                    }
-                }
-
-
-                string[] ss = File.ReadAllLines(pdfConfigPath);
-                for (int i = 0; i < listBox1.Items.Count; i++)//读取Pdf格式
-                {
-                    try
-                    {
-                        string? itemText = listBox1.Items[i]?.ToString();
-                        if (itemText == null) continue;
-                        string? line = ss.FirstOrDefault(s => s.Contains(itemText));
-                        if (line == null) throw new InvalidOperationException();
-                        string[] str = line.Split(':');
-                        PDFFormat.Add(str[0], str[1]);
-                    }
-                    catch
-                    {
-                        string? itemText = listBox1.Items[i]?.ToString();
-                        if (itemText != null)
-                            PDFFormat.Add(itemText, "");
-                    }
-                }
-            }
-            // 加载模板通过服务
-            classtemp = _templateService.LoadAll();
             LoadKey();
         }
 
         private void Start_Click(object sender, EventArgs e)
         {
-            Start.Enabled = false;
-            Start.Text = "正在识别";
-            Task.Run(() =>
-             {
-                 // 验证并初始化 OCR 服务
-                 try
-                 {
-                     EnsureOcrService(textBox3.Text?.Trim() ?? "", textBox4.Text?.Trim() ?? "");
-                 }
-                 catch (ArgumentException ex)
-                 {
-                     MessageBox.Show($"初始化 OCR 失败: {ex.Message}", "错误");
-                     return;
-                 }
+            ExName.Clear(); PDFName.Clear();
+            if (FileClass.SelectedItem.ToString() == "PDF")
+            {
+                #region
+                Start.Enabled = false;
+                Start.Text = "正在识别";
+                Task.Run(() =>
+                {
+                    // 验证并初始化 OCR 服务
+                    try
+                    {
+                        EnsureOcrService(textBox3.Text?.Trim() ?? "", textBox4.Text?.Trim() ?? "");
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        MessageBox.Show($"初始化 OCR 失败: {ex.Message}", "错误");
+                        return;
+                    }
 
-                 // 读取模板
-                 classtemp = _templateService.LoadAll();
-                 if (classtemp.Count == 0)
-                 {
-                     MessageBox.Show("未找到模板，请先配置模板分类");
-                     return;
-                 }
+                    // 读取模板
+                    PDFclasstemp = _templateService.LoadPDFTempleta();
+                    if (PDFclasstemp.Count == 0)
+                    {
+                        MessageBox.Show("未找到模板，请先配置模板分类");
+                        return;
+                    }
 
-                 //读取模板（通过服务）
-                 classtemp = _templateService.LoadAll();
+                    //读取模板（通过服务）
+                    PDFclasstemp = _templateService.LoadPDFTempleta();
 
-                 ExName.Clear(); PDFName.Clear();
 
-                 // ========== 进度条初始化 ==========
-                 int totalFiles = PDFdata.Rows.Count;
-                 int processedFiles = 0;
-                 progressBar1.Minimum = 0;
-                 progressBar1.Maximum = totalFiles;
-                 progressBar1.Value = 0;
-                 progressBar1.Visible = true;
-                 lblProgress.Text = $"0 / {totalFiles}";
-                 lblProgress.Visible = true;
-                 Start.Enabled = false; // 防止重复点击
-                 List<string> ErrorPaths = new List<string>();//分类错误发票
-                 // ==================================
+                    // ========== 进度条初始化 ==========
+                    int totalFiles = PDFdata.Rows.Count;
+                    int processedFiles = 0;
+                    progressBar1.Minimum = 0;
+                    progressBar1.Maximum = totalFiles;
+                    progressBar1.Value = 0;
+                    progressBar1.Visible = true;
+                    lblProgress.Text = $"0 / {totalFiles}";
+                    lblProgress.Visible = true;
+                    Start.Enabled = false; // 防止重复点击
+                    List<string> ErrorPaths = new List<string>();//分类错误发票
+                                                                 // ==================================
 
-                 for (int i = 0; i < PDFdata.Rows.Count; i++)
-                 {
-                     using var pdf = new Spire.Pdf.PdfDocument();
-                     var txt = new System.Text.StringBuilder();
-                     string? path = PDFdata.Rows[i].Cells[1].Value?.ToString();
-                     if (string.IsNullOrEmpty(path)) continue;
-                     pdf.LoadFromFile(path);
-                     //文本化开始分类
-                     using (var doc = UglyToad.PdfPig.PdfDocument.Open(path))
-                     {
-                         foreach (var page in doc.GetPages())
-                         {
-                             foreach (var w in page.GetWords(NearestNeighbourWordExtractor.Instance))
-                                 txt.Append(w.Text).Append(' ');
-                         }
-                         string tt = CleanPdfText(txt.ToString());
-                         //分类
-                         for (int j = 0; j < listBox1.Items.Count; j++)
-                         {
-                             string? className = listBox1.Items[j]?.ToString();
-                             if (className == null) continue;
-                             if (tt.Contains(className))
-                             {
-                                 if (!classtemp.TryGetValue(className, out List<TemplateItem>? templates) || templates == null)
-                                     continue;
+                    for (int i = 0; i < PDFdata.Rows.Count; i++)
+                    {
+                        using var pdf = new Spire.Pdf.PdfDocument();
+                        var txt = new System.Text.StringBuilder();
+                        string? path = PDFdata.Rows[i].Cells[1].Value?.ToString();
+                        if (string.IsNullOrEmpty(path)) continue;
+                        pdf.LoadFromFile(path);
+                        //文本化开始分类
+                        using (var doc = UglyToad.PdfPig.PdfDocument.Open(path))
+                        {
+                            foreach (var page in doc.GetPages())
+                            {
+                                foreach (var w in page.GetWords(NearestNeighbourWordExtractor.Instance))
+                                    txt.Append(w.Text).Append(' ');
+                            }
+                            string tt = CleanPdfText(txt.ToString());
+                            //分类
+                            for (int j = 0; j < listBox1.Items.Count; j++)
+                            {
+                                string? className = listBox1.Items[j]?.ToString();
+                                if (className == null) continue;
+                                if (tt.Contains(className))
+                                {
+                                    if (!PDFclasstemp.TryGetValue(className, out List<TemplateItem>? templates) || templates == null)
+                                        continue;
 
-                                 using var image = pdf.SaveAsImage(0, PdfImageType.Bitmap, 600, 600);//图片化
-                                 List<string> strs = new List<string>();
-                                 for (int k = 0; k < templates.Count; k++)
-                                 {
-                                     string tempImagepath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Templates", className, templates[k].ImageFile);
-                                     using var srcBmp = new Bitmap(image);
-                                     using var tempBmp = new Bitmap(tempImagepath);
-                                     using var bitmap = GetRectangle(srcBmp, tempBmp, templates[k], testMode.Checked);
-                                     // 使用服务层 OCR
-                                     strs.Add(_ocrService!.Recognize(bitmap));
-                                 }
-                                 if (!ExcelFormat.TryGetValue(className, out string? excelFormat) || excelFormat == null)
-                                     continue;
-                                 if (!PDFFormat.TryGetValue(className, out string? pdfFormat) || pdfFormat == null)
-                                     continue;
-                                 try
-                                 {
-                                     //填入格式中
-                                     string excelResult = string.Format(excelFormat, strs.ToArray());
-                                     string pdfResult = string.Format(pdfFormat, strs.ToArray());
+                                    using var image = pdf.SaveAsImage(0, PdfImageType.Bitmap, 600, 600);//图片化
+                                    List<string> strs = new List<string>();
+                                    for (int k = 0; k < templates.Count; k++)
+                                    {
+                                        string tempImagepath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Templates\\PDF", className, templates[k].ImageFile);
+                                        using var srcBmp = new Bitmap(image);
+                                        using var tempBmp = new Bitmap(tempImagepath);
+                                        using var bitmap = GetRectangle(srcBmp, tempBmp, templates[k], testMode.Checked);
+                                        // 使用服务层 OCR
+                                        strs.Add(_ocrService!.Recognize(bitmap));
+                                    }
+                                    if (!ExcelFormat.TryGetValue(className, out string? excelFormat) || excelFormat == null)
+                                        continue;
+                                    if (!PDFFormat.TryGetValue(className, out string? pdfFormat) || pdfFormat == null)
+                                        continue;
+                                    try
+                                    {
+                                        //填入格式中
+                                        string excelResult = string.Format(excelFormat, strs.ToArray());
+                                        string pdfResult = string.Format(pdfFormat, strs.ToArray());
 
-                                     PDFdata.Rows[i].Selected = true;//界面上显示进度
-                                     ExName.Add(path, excelResult);
-                                     PDFName.Add(path, pdfResult);
-                                 }
-                                 catch (FormatException)
-                                 {
-                                     MessageBox.Show($"{className}: 模板数量与格式填写的数量不相等,无法写入请正确填写");
-                                 }
-                                 if (ErrorPaths.Count > 0 && ErrorPaths.Last() == path)
-                                 {
-                                     ErrorPaths.Remove(path);
-                                 }
-                                 break;
-                             }
-                             else
-                             {
-                                 if (ErrorPaths.Last() != path)
-                                 {
-                                     ErrorPaths.Add(path);
-                                 }
-                             }
-                         }
-                     }
+                                        PDFdata.Rows[i].Selected = true;//界面上显示进度
+                                        ExName.Add(path, excelResult);
+                                        PDFName.Add(path, pdfResult);
+                                    }
+                                    catch (FormatException)
+                                    {
+                                        MessageBox.Show($"{className}: 模板数量与格式填写的数量不相等,无法写入请正确填写");
+                                    }
+                                    if (ErrorPaths.Count > 0 && ErrorPaths.Last() == path)
+                                    {
+                                        ErrorPaths.Remove(path);
+                                    }
+                                    break;
+                                }
+                                else
+                                {
+                                    if (ErrorPaths.Last() != path)
+                                    {
+                                        ErrorPaths.Add(path);
+                                    }
+                                }
+                            }
+                        }
 
-                     // ========== 更新进度 ==========
-                     processedFiles++;
-                     progressBar1.Value = processedFiles;
-                     lblProgress.Text = $"{processedFiles} / {totalFiles}";
-                     PDFdata.FirstDisplayedScrollingRowIndex = i; // 自动滚动到当前行
-                 }
-                 // ========== 识别完成，恢复状态 ==========
-                 Start.Enabled = true;
-                 progressBar1.Value = progressBar1.Maximum;
-                 lblProgress.Text = $"完成: {processedFiles} / {totalFiles}";
-                 // =======================================
-                 this.Invoke(() =>
-                 {
-                     if (MessageBox.Show($"识别结束,分类失败{ErrorPaths.Count}个。是否移动到Error位置", "", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                     {
-                         string destpeth = textBox1.Text + "\\Error";
-                         Directory.CreateDirectory(textBox1.Text + "\\Error");
-                         foreach (var item in ErrorPaths)
-                         {
-                             File.Move(item, destpeth + "\\" + Path.GetFileName(item));
-                         }
-                     }
-                     Start.Enabled = true;
-                     Start.Text = "开始识别";
-                 });
-             });
+                        // ========== 更新进度 ==========
+                        processedFiles++;
+                        progressBar1.Value = processedFiles;
+                        lblProgress.Text = $"{processedFiles} / {totalFiles}";
+                        PDFdata.FirstDisplayedScrollingRowIndex = i; // 自动滚动到当前行
+                    }
+                    // ========== 识别完成，恢复状态 ==========
+                    Start.Enabled = true;
+                    progressBar1.Value = progressBar1.Maximum;
+                    lblProgress.Text = $"完成: {processedFiles} / {totalFiles}";
+                    // =======================================
+                    this.Invoke(() =>
+                    {
+                        if (MessageBox.Show($"识别结束,分类失败{ErrorPaths.Count}个。是否移动到Error位置", "", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        {
+                            string destpeth = textBox1.Text + "\\Error";
+                            Directory.CreateDirectory(textBox1.Text + "\\Error");
+                            foreach (var item in ErrorPaths)
+                            {
+                                File.Move(item, destpeth + "\\" + Path.GetFileName(item));
+                            }
+                        }
+                        Start.Enabled = true;
+                        Start.Text = "开始识别";
+                    });
+                });
+                #endregion
+            }
+            else if (FileClass.SelectedItem.ToString() == "XML")
+            {
+                Start.Enabled = false;
+                Start.Text = "正在识别";
+                Task.Run(() =>
+                {
+                    for (int i = 0; i < PDFdata.Rows.Count; i++)
+                    {
+                        string? path = PDFdata.Rows[i].Cells[1].Value?.ToString();
+                        XDocument document = XDocument.Load(path);
+                        string xmlContent = File.ReadAllText(path, Encoding.UTF8);
+                        for (int j = 0; j < listBox1.Items.Count; j++)
+                        {
+                            string? className = listBox1.Items[j]?.ToString();
+                            if (className == null|| !xmlContent.Contains(className)) continue;
+                            List<string> xmlformat = new List<string>();
+                            if (xmlContent.Contains(className))//分类
+                            {
+                                List<XMLTemplateItem> xML = XMLclasstemp[className];
+                                foreach (XMLTemplateItem item in xML)
+                                {
+                                   xmlformat.Add(ReadXPath(item.XPath, document));//读取完数据
+                                }
+                            }
+
+                            if (!ExcelFormat.TryGetValue(className, out string? excelFormat) || excelFormat == null)
+                                continue;
+                            if (!PDFFormat.TryGetValue(className, out string? pdfFormat) || pdfFormat == null)
+                                continue;
+
+                            string excelResult = string.Format(excelFormat, xmlformat.ToArray());
+                            string pdfResult = string.Format(pdfFormat, xmlformat.ToArray());
+                            ExName.Add(path, excelResult);
+                            PDFName.Add(path, pdfResult);
+                        }
+                    }
+                    Start.Enabled = true;
+                    Start.Text = "开始识别";
+                });
+            }
+
         }
         Dictionary<string, string> ExName = new Dictionary<string, string>();
         Dictionary<string, string> PDFName = new Dictionary<string, string>();
@@ -541,25 +552,36 @@ namespace 发票
 
         private void setTXTFomat_Click(object sender, EventArgs e)
         {
-            string? key = listBox1.SelectedItem?.ToString();
-            if (key == null) return;
-            ExcelFormat[key] = txtFomatbox.Text;
-            PDFFormat[key] = PDFfomat.Text;
-            RefreshFormat();
+            if (FileClass.Text == "PDF")
+            {
+                string? key = listBox1.SelectedItem?.ToString();
+                if (key == null) return;
+                ExcelFormat[key] = txtFomatbox.Text;
+                PDFFormat[key] = PDFfomat.Text;
+                RefreshFormat();
+            }
+            else if (FileClass.Text == "XML")
+            {
+                string? key = listBox1.SelectedItem?.ToString();
+                if (key == null) return;
+                ExcelFormat[key] = txtFomatbox.Text;
+                PDFFormat[key] = PDFfomat.Text;
+                RefreshFormat();
+            }
         }
         #region
         Dictionary<string, string> ExcelFormat = new Dictionary<string, string>();
         Dictionary<string, string> PDFFormat = new Dictionary<string, string>();
 
-        string excelConfigPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Templates", "Config.txt");
-        string pdfConfigPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Templates", "ConfigPDF.txt");
+        string excelConfigPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Templates\\PDF", "Config.txt");
+        string pdfConfigPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Templates\\PDF", "ConfigPDF.txt");
         /// <summary>
         /// 刷新并保存 Excel 和 PDF 输出格式配置
         /// </summary>
         private void RefreshFormat()
         {
             // 确保 Templates 目录存在（一次操作）
-            string templatesDir = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Templates");
+            string templatesDir = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Templates\\PDF");
             Directory.CreateDirectory(templatesDir);
 
             // 配置文件路径
@@ -594,60 +616,104 @@ namespace 发票
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            showFomat.Text = null;
-            string key = listBox1.SelectedItem?.ToString();
-            if (key == null) return;
-
-            txtFomatbox.Text = ExcelFormat.TryGetValue(key, out var excelFmt) ? excelFmt : "";
-            PDFfomat.Text = PDFFormat.TryGetValue(key, out var pdfFmt) ? pdfFmt : "";
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine(key + ": ");
-
-            if (classtemp.TryGetValue(key, out List<TemplateItem> items))
+            if (FileClass.Text == "PDF")
             {
-                for (int i = 0; i < items.Count; i++)
-                {
-                    sb.AppendLine($"{i} : {items[i].ClassName}");
-                }
-            }
+                showFomat.Text = null;
+                string key = listBox1.SelectedItem?.ToString();
+                if (key == null) return;
 
-            showFomat.Text = sb.ToString();  // 直接改 Text，不用 Lines
+                txtFomatbox.Text = ExcelFormat.TryGetValue(key, out var excelFmt) ? excelFmt : "";
+                PDFfomat.Text = PDFFormat.TryGetValue(key, out var pdfFmt) ? pdfFmt : "";
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine(key + ": ");
+
+                if (PDFclasstemp.TryGetValue(key, out List<TemplateItem> items))
+                {
+                    for (int i = 0; i < items.Count; i++)
+                    {
+                        sb.AppendLine($"{i} : {items[i].ClassName}");
+                    }
+                }
+                showFomat.Text = sb.ToString();
+            }
+            else if (FileClass.Text == "XML")
+            {
+                showFomat.Text = null;
+                string key = listBox1.SelectedItem?.ToString();
+                if (key == null) return;
+                txtFomatbox.Text = ExcelFormat.TryGetValue(key, out var excelFmt) ? excelFmt : "";
+                PDFfomat.Text = PDFFormat.TryGetValue(key, out var pdfFmt) ? pdfFmt : "";
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine(key + ": ");
+                if (XMLclasstemp.TryGetValue(key, out List<XMLTemplateItem> items))
+                {
+                    for (int i = 0; i < items.Count; i++)
+                    {
+                        sb.AppendLine($"{i} : {items[i].ClassName}");
+                    }
+                }
+                showFomat.Text = sb.ToString();
+            }
         }
 
         private async void outPDF_Click(object sender, EventArgs e)
         {
-            if (PDFName == null || PDFName.Count == 0)
-            {
-                MessageBox.Show("没有数据可导出");
-                return;
-            }
-
             string path = textBox2.Text;
             if (string.IsNullOrWhiteSpace(path))
             {
                 MessageBox.Show("请选择目标目录");
                 return;
             }
+            if (PDFName == null || PDFName.Count == 0)
+            {
+                MessageBox.Show("没有数据可导出");
+                return;
+            }
+            if (FileClass.Text == "PDF")
+            {
+                try
+                {
+                    outPDF.Enabled = false;
+                    // 在后台执行复制，避免阻塞 UI
+                    var result = await Task.Run(() => _exportService.CopyFiles(PDFName, path, overwrite: false));
+                    MessageBox.Show($"导出完成：成功 {result.success}，失败 {result.failed}");
+                }
+                catch (ArgumentException ex)
+                {
+                    MessageBox.Show($"导出失败：{ex.Message}");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"导出过程中出现错误：{ex.Message}");
+                }
+                finally
+                {
+                    outPDF.Enabled = true;
+                }
+            }
+            else if(FileClass.Text =="XML")
+            {
+                FolderBrowserDialog dialog = new FolderBrowserDialog();
+                MessageBox.Show("请选择保存PDF的文件夹，通过相同的名称自动识别");
+                dialog.ShowDialog();
+                string ppath = dialog.SelectedPath;
 
-            try
-            {
-                outPDF.Enabled = false;
-                // 在后台执行复制，避免阻塞 UI
-                var result = await Task.Run(() => _exportService.CopyFiles(PDFName, path, overwrite: false));
-                MessageBox.Show($"导出完成：成功 {result.success}，失败 {result.failed}");
+                foreach (var item in PDFName)
+                {
+                    string fileName = Path.GetFileNameWithoutExtension(item.Key) + ".pdf";
+                    string succorPDFPath = Path.Combine(ppath, fileName);
+                    string destPath = Path.Combine(textBox2.Text,item.Value+".pdf");
+                    try
+                    {
+                        File.Copy(succorPDFPath, destPath, overwrite: false);
+                    }
+                    catch (IOException ex)
+                    {
+                        MessageBox.Show($"文件 {fileName} 导出失败: {ex.Message}");
+                    }
+                }
             }
-            catch (ArgumentException ex)
-            {
-                MessageBox.Show($"导出失败：{ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"导出过程中出现错误：{ex.Message}");
-            }
-            finally
-            {
-                outPDF.Enabled = true;
-            }
+            MessageBox.Show("导出完成");
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -682,23 +748,6 @@ namespace 发票
                 File.WriteAllText("Api.json", json);
             }
         }
-        public void LoadKey()
-        {
-            if (!File.Exists("Api.json"))
-            {
-                checkBox1.Checked= false;
-                return;
-            }
-
-                string json = File.ReadAllText("Api.json");
-            var config = JsonSerializer.Deserialize<ApiConfig>(json);
-
-            if (config != null)
-            {
-                textBox3.Text = config.AppId;
-                textBox4.Text = config.SecretKey;
-            }
-        }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
@@ -713,6 +762,147 @@ namespace 发票
                     File.Delete("Api.json");
                 }
             }
+        }
+        private void LoadTemplate_Click(object sender, EventArgs e)
+        {
+            if (FileClass.Text == "PDF")
+            {
+                TemplatePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Templates\\PDF", ModeName.Text);
+                RefreshListBox(listBox1);
+
+                excelConfigPath = System.IO.Path.Combine(TemplatePath, "Config.txt");
+                pdfConfigPath = System.IO.Path.Combine(TemplatePath, "ConfigPDF.txt");
+                LoadCongfig();
+
+                _templateService = new TemplateService(TemplatePath);
+                PDFclasstemp = _templateService.LoadPDFTempleta();
+            }
+            if (FileClass.Text == "XML")
+            {
+                TemplatePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Templates\\XML", ModeName.Text);
+                RefreshListBox(listBox1);
+
+                excelConfigPath = System.IO.Path.Combine(TemplatePath, "Config.txt");
+                pdfConfigPath = System.IO.Path.Combine(TemplatePath, "ConfigPDF.txt");
+
+                LoadCongfig();
+
+                _templateService = new TemplateService(TemplatePath);
+                XMLclasstemp = _templateService.LoadXMLTrmoleta();
+            }
+
+        }
+        public void LoadCongfig()
+        {
+            if (File.Exists(excelConfigPath))
+            {
+                ExcelFormat.Clear();
+                string[] stringps = File.ReadAllLines(excelConfigPath);
+
+                for (int i = 0; i < listBox1.Items.Count; i++)//读取表格格式
+                {
+                    try
+                    {
+                        string? itemText = listBox1.Items[i]?.ToString();
+                        if (itemText == null) continue;
+                        string? line = stringps.FirstOrDefault(s => s.Contains(itemText));
+                        if (line == null) throw new InvalidOperationException();
+                        string[] str = line.Split(':');
+                        ExcelFormat.Add(str[0], str[1]);
+                    }
+                    catch
+                    {
+                        string? itemText = listBox1.Items[i]?.ToString();
+                        if (itemText != null)
+                            ExcelFormat.Add(itemText, " ");
+                    }
+                }
+
+                PDFFormat.Clear();
+                string[] ss = File.ReadAllLines(pdfConfigPath);
+                for (int i = 0; i < listBox1.Items.Count; i++)//读取Pdf格式
+                {
+                    try
+                    {
+                        string? itemText = listBox1.Items[i]?.ToString();
+                        if (itemText == null) continue;
+                        string? line = ss.FirstOrDefault(s => s.Contains(itemText));
+                        if (line == null) throw new InvalidOperationException();
+                        string[] str = line.Split(':');
+                        PDFFormat.Add(str[0], str[1]);
+                    }
+                    catch
+                    {
+                        string? itemText = listBox1.Items[i]?.ToString();
+                        if (itemText != null)
+                            PDFFormat.Add(itemText, "");
+                    }
+                }
+            }
+        }
+
+        public void LoadKey()
+        {
+            if (!File.Exists("Api.json"))
+            {
+                checkBox1.Checked = false;
+                return;
+            }
+
+            string json = File.ReadAllText("Api.json");
+            var config = JsonSerializer.Deserialize<ApiConfig>(json);
+
+            if (config != null)
+            {
+                textBox3.Text = config.AppId;
+                textBox4.Text = config.SecretKey;
+            }
+        }
+
+        private void FileClass_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ModeName.Items.Clear();
+            string pa = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Templates", FileClass.Text);
+            DirectoryInfo directory = new DirectoryInfo(pa);
+            DirectoryInfo[] infos = directory.GetDirectories();
+            foreach (DirectoryInfo info in infos)
+            {
+                ModeName.Items.Add(info.Name);
+            }
+
+        }
+        /// <summary>
+        /// 用 XPath 读取节点值（支持元素和属性）
+        /// </summary>
+        private string ReadXPath(string xpath, XDocument doc)
+        {
+            try
+            {
+                if (xpath.Contains("/@"))
+                {
+                    var result = doc.XPathEvaluate(xpath);
+                    if (result is IEnumerable<object> enumerable)
+                    {
+                        var first = enumerable.FirstOrDefault();
+                        return first?.ToString() ?? string.Empty;
+                    }
+                    return result?.ToString() ?? string.Empty;
+                }
+                else
+                {
+                    var element = doc.XPathSelectElement(xpath);
+                    return element?.Value ?? string.Empty;
+                }
+            }
+            catch
+            {
+                return string.Empty;
+            }
+        }
+
+        private void ClassMode_Click(object sender, EventArgs e)
+        {
+
         }
     }
     public class ApiConfig
