@@ -13,6 +13,7 @@ namespace 发票
         private ZoomImageBox zoomBox = null!;
         private List<TemplateInfo> templates = new List<TemplateInfo>();
         string FileName = "";
+        string TemplatePath = "";
         private enum SelectMode
         {
             None,
@@ -31,9 +32,10 @@ namespace 发票
             public Image? TemplateImage { get; set; }
         }
 
-        public MakeModes(Image image, string classnaem)
+        public MakeModes(Image image, string classnaem,string templatePath)
         {
             FileName = classnaem;
+            TemplatePath= templatePath;
             InitializeComponent();
 
             if (groupBox1 == null)
@@ -276,7 +278,7 @@ namespace 发票
                 return;
             }
 
-            string baseDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Templates\\PDF", FileName);
+            string baseDir = Path.Combine(TemplatePath, FileName);
             Directory.CreateDirectory(baseDir);
 
             var config = new TemplateConfig();

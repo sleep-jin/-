@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\Sleeped\\Desktop\\\u53D1\u7968\u62A5\u9500\u5355\u5904\u7406\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{DB0907E6-9BB9-498E-B4BB-79A1E0B841C7}|\u53D1\u7968.csproj|c:\\users\\sleeped\\desktop\\\u53D1\u7968\u62A5\u9500\u5355\u5904\u7406\\makemodes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DB0907E6-9BB9-498E-B4BB-79A1E0B841C7}|\u53D1\u7968.csproj|solutionrelative:makemodes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{DB0907E6-9BB9-498E-B4BB-79A1E0B841C7}|\u53D1\u7968.csproj|c:\\users\\sleeped\\desktop\\\u53D1\u7968\u62A5\u9500\u5355\u5904\u7406\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{DB0907E6-9BB9-498E-B4BB-79A1E0B841C7}|\u53D1\u7968.csproj|solutionrelative:form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -34,19 +38,28 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 0,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MakeModes.cs",
+              "DocumentMoniker": "C:\\Users\\Sleeped\\Desktop\\\u53D1\u7968\u62A5\u9500\u5355\u5904\u7406\\MakeModes.cs",
+              "RelativeDocumentMoniker": "MakeModes.cs",
+              "ToolTip": "C:\\Users\\Sleeped\\Desktop\\\u53D1\u7968\u62A5\u9500\u5355\u5904\u7406\\MakeModes.cs*",
+              "RelativeToolTip": "MakeModes.cs*",
+              "ViewState": "AgIAAAYBAAAAAAAAAAD4vxYBAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-26T01:39:43.393Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{c6f34f0d-7ae5-4f3a-be61-fe0c21ae9eb8}"
-            },
-            {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "FileExportService.cs",
               "DocumentMoniker": "C:\\Users\\Sleeped\\Desktop\\\u53D1\u7968\u62A5\u9500\u5355\u5904\u7406\\Services\\FileExportService.cs",
               "RelativeDocumentMoniker": "Services\\FileExportService.cs",
@@ -58,7 +71,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "MakeXMLMode.cs",
               "DocumentMoniker": "C:\\Users\\Sleeped\\Desktop\\\u53D1\u7968\u62A5\u9500\u5355\u5904\u7406\\MakeXMLMode.cs",
               "RelativeDocumentMoniker": "MakeXMLMode.cs",
@@ -71,7 +84,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "MakeXMLMode.cs [\u8BBE\u8BA1]",
               "DocumentMoniker": "C:\\Users\\Sleeped\\Desktop\\\u53D1\u7968\u62A5\u9500\u5355\u5904\u7406\\MakeXMLMode.cs",
               "RelativeDocumentMoniker": "MakeXMLMode.cs",
@@ -82,7 +95,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "TemplateService.cs",
               "DocumentMoniker": "C:\\Users\\Sleeped\\Desktop\\\u53D1\u7968\u62A5\u9500\u5355\u5904\u7406\\Services\\TemplateService.cs",
               "RelativeDocumentMoniker": "Services\\TemplateService.cs",
@@ -94,27 +107,28 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "Form1.cs",
               "DocumentMoniker": "C:\\Users\\Sleeped\\Desktop\\\u53D1\u7968\u62A5\u9500\u5355\u5904\u7406\\Form1.cs",
               "RelativeDocumentMoniker": "Form1.cs",
-              "ToolTip": "C:\\Users\\Sleeped\\Desktop\\\u53D1\u7968\u62A5\u9500\u5355\u5904\u7406\\Form1.cs",
-              "RelativeToolTip": "Form1.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAMACAABRAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\Sleeped\\Desktop\\\u53D1\u7968\u62A5\u9500\u5355\u5904\u7406\\Form1.cs*",
+              "RelativeToolTip": "Form1.cs*",
+              "ViewState": "AgIAAIgAAAAAAAAAAAD4v5kAAAAvAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-01-04T11:42:32.349Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "Form1.cs [\u8BBE\u8BA1]",
               "DocumentMoniker": "C:\\Users\\Sleeped\\Desktop\\\u53D1\u7968\u62A5\u9500\u5355\u5904\u7406\\Form1.cs",
               "RelativeDocumentMoniker": "Form1.cs",
-              "ToolTip": "C:\\Users\\Sleeped\\Desktop\\\u53D1\u7968\u62A5\u9500\u5355\u5904\u7406\\Form1.cs [\u8BBE\u8BA1]",
-              "RelativeToolTip": "Form1.cs [\u8BBE\u8BA1]",
+              "ToolTip": "C:\\Users\\Sleeped\\Desktop\\\u53D1\u7968\u62A5\u9500\u5355\u5904\u7406\\Form1.cs [\u8BBE\u8BA1]*",
+              "RelativeToolTip": "Form1.cs [\u8BBE\u8BA1]*",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-14T03:48:06.928Z"
+              "WhenOpened": "2026-05-14T03:48:06.928Z",
+              "EditorCaption": " [\u8BBE\u8BA1]"
             }
           ]
         }

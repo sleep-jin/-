@@ -151,7 +151,7 @@ namespace 发票
                 using var pdf = new Spire.Pdf.PdfDocument();
                 pdf.LoadFromFile(pdfPath);
                 Image image = pdf.SaveAsImage(0, PdfImageType.Bitmap, 600, 600);
-                MakeModes modes = new MakeModes(image, className);
+                MakeModes modes = new MakeModes(image, className, TemplatePath);
                 modes.ShowDialog();
                 PDFclasstemp = _templateService.LoadPDFTempleta();//重新载入模板
             }
