@@ -1,4 +1,5 @@
 ﻿using OpenCvSharp;
+using Sunny.UI;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -8,7 +9,7 @@ using System.Windows.Forms;
 
 namespace 发票
 {
-    public partial class MakeModes : Form
+    public partial class MakeModes : UIForm
     {
         private ZoomImageBox zoomBox = null!;
         private List<TemplateInfo> templates = new List<TemplateInfo>();
@@ -354,7 +355,7 @@ namespace 发票
         }
         private void MakeModes_Load(object sender, EventArgs e)
         {
-            string baseDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Templates\\PDF", FileName);
+            string baseDir = Path.Combine(TemplatePath, FileName);
             string configPath = Path.Combine(baseDir, $"{FileName}.json");
 
             if (!File.Exists(configPath))

@@ -21,6 +21,7 @@ namespace 发票
             var result = new Dictionary<string, List<TemplateItem>>();
             if (!Directory.Exists(_templatesDir)) return result;
 
+            string modenames = "";
             foreach (var folder in Directory.GetDirectories(_templatesDir))
             {
                 string name = Path.GetFileName(folder);
@@ -32,8 +33,9 @@ namespace 发票
                 {
                     result[name] = root.Templates;
                 }
+                modenames += name + "，";
             }
-            MessageBox.Show($"成功加载：{result.Count}个模板");
+            MessageBox.Show($"成功加载：{result.Count}个模板:{modenames.TrimEnd('，')}");
             return result;
         }
         public Dictionary<string, List<XMLTemplateItem>> LoadXMLTrmoleta()
@@ -41,6 +43,7 @@ namespace 发票
             var result = new Dictionary<string, List<XMLTemplateItem>>();
             if (!Directory.Exists(_templatesDir)) return result;
 
+            string modenames = "";
             foreach (var folder in Directory.GetDirectories(_templatesDir))
             {
                 string name = Path.GetFileName(folder);
@@ -63,8 +66,9 @@ namespace 发票
                     // 记录日志或根据需求处理
                     Console.WriteLine($"加载节点 {name} 失败: {ex.Message}");
                 }
+                modenames += name + "，";
             }
-
+            MessageBox.Show($"成功加载：{result.Count}个模板:{modenames.TrimEnd('，')}");
             return result;
         }
         public Dictionary<string, List<TemplateItem>> LoadXMLConfigon() 
