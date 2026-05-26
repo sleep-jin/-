@@ -1,0 +1,29 @@
+﻿{
+  "Templates": [
+    {
+      "ClassName": "from",
+      "ImageFile": "from.png",
+      "ROI": "-312,124,918,316"
+    },
+    {
+      "ClassName": "to",
+      "ImageFile": "to.png",
+      "ROI": "-294,124,890,346"
+    },
+    {
+      "ClassName": "开票日期",
+      "ImageFile": "开票日期.png",
+      "ROI": "371,-12,745,167"
+    },
+    {
+      "ClassName": "付款日期",
+      "ImageFile": "付款日期.png",
+      "ROI": "-53,121,456,143"
+    },
+    {
+      "ClassName": "金额",
+      "ImageFile": "金额.png",
+      "ROI": "265,-9,448,149"
+    }
+  ]
+}

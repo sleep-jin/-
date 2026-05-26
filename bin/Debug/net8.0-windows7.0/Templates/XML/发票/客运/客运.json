@@ -1,0 +1,18 @@
+﻿[
+  {
+    "ClassName": "金额",
+    "XPath": "//EInvoiceData/BasicInformation/TotalTax-includedAmount"
+  },
+  {
+    "ClassName": "起点",
+    "XPath": "//EInvoiceData/SpecificInformation/PassengerTransportation/Departure"
+  },
+  {
+    "ClassName": "终点",
+    "XPath": "//EInvoiceData/SpecificInformation/PassengerTransportation/Destination"
+  },
+  {
+    "ClassName": "开票日期",
+    "XPath": "//EInvoiceData/SpecificInformation/PassengerTransportation/TravelDate"
+  }
+]

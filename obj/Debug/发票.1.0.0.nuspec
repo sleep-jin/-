@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>发票</id>
+    <version>1.0.0</version>
+    <authors>发票</authors>
+    <description>Package Description</description>
+    <repository type="git" commit="3c5b53e821a23abd34b5effd5ea8386c7946ae30" />
+    <dependencies>
+      <group targetFramework="net8.0-windows7.0">
+        <dependency id="EPPlus" version="8.5.4" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="13.0.4" exclude="Build,Analyzers" />
+        <dependency id="OpenCvSharp4.Extensions" version="4.13.0.20260427" exclude="Build,Analyzers" />
+        <dependency id="OpenCvSharp4.Windows" version="4.13.0.20260302" exclude="Build,Analyzers" />
+        <dependency id="PdfPig" version="0.1.14" exclude="Build,Analyzers" />
+        <dependency id="RestSharp" version="106.15.0" exclude="Build,Analyzers" />
+        <dependency id="Spire.PDF" version="12.4.5" exclude="Build,Analyzers" />
+        <dependency id="SunnyUI" version="3.9.7" exclude="Build,Analyzers" />
+        <dependency id="SunnyUI.Common" version="3.9.7" exclude="Build,Analyzers" />
+        <dependency id="Tesseract" version="5.2.0" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+    <frameworkReferences>
+      <group targetFramework="net8.0-windows7.0">
+        <frameworkReference name="Microsoft.WindowsDesktop.App.WindowsForms" />
+      </group>
+    </frameworkReferences>
+  </metadata>
+  <files>
+    <file src="C:\Users\sleep\Desktop\发票报销单处理\bin\Debug\net8.0-windows7.0\发票.runtimeconfig.json" target="lib\net8.0-windows7.0\发票.runtimeconfig.json" />
+    <file src="C:\Users\sleep\Desktop\发票报销单处理\bin\Debug\net8.0-windows7.0\发票.dll" target="lib\net8.0-windows7.0\发票.dll" />
+  </files>
+</package>
