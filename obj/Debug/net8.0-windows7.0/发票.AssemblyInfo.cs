@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("发票")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+851b659538038dbb684571eba8b1b590265251d2")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+555940d599f2ae02b27f9f2885945a2e899a8240")]
 [assembly: System.Reflection.AssemblyProductAttribute("发票")]
 [assembly: System.Reflection.AssemblyTitleAttribute("发票")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

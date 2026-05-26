@@ -3,12 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\Sleeped\\Desktop\\\u53D1\u7968\u62A5\u9500\u5355\u5904\u7406\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{DB0907E6-9BB9-498E-B4BB-79A1E0B841C7}|\u53D1\u7968.csproj|c:\\users\\sleeped\\desktop\\\u53D1\u7968\u62A5\u9500\u5355\u5904\u7406\\main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{DB0907E6-9BB9-498E-B4BB-79A1E0B841C7}|\u53D1\u7968.csproj|solutionrelative:main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+      "AbsoluteMoniker": "D:0:0:{DB0907E6-9BB9-498E-B4BB-79A1E0B841C7}|\u53D1\u7968.csproj|c:\\users\\sleeped\\desktop\\\u53D1\u7968\u62A5\u9500\u5355\u5904\u7406\\\u53D1\u7968.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|",
+      "RelativeMoniker": "D:0:0:{DB0907E6-9BB9-498E-B4BB-79A1E0B841C7}|\u53D1\u7968.csproj|solutionrelative:\u53D1\u7968.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{DB0907E6-9BB9-498E-B4BB-79A1E0B841C7}|\u53D1\u7968.csproj|c:\\users\\sleeped\\desktop\\\u53D1\u7968\u62A5\u9500\u5355\u5904\u7406\\main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{DB0907E6-9BB9-498E-B4BB-79A1E0B841C7}|\u53D1\u7968.csproj|solutionrelative:main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DB0907E6-9BB9-498E-B4BB-79A1E0B841C7}|\u53D1\u7968.csproj|c:\\users\\sleeped\\desktop\\\u53D1\u7968\u62A5\u9500\u5355\u5904\u7406\\main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{DB0907E6-9BB9-498E-B4BB-79A1E0B841C7}|\u53D1\u7968.csproj|solutionrelative:main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,11 +22,23 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "\u53D1\u7968",
+              "DocumentMoniker": "C:\\Users\\Sleeped\\Desktop\\\u53D1\u7968\u62A5\u9500\u5355\u5904\u7406\\\u53D1\u7968.csproj",
+              "RelativeDocumentMoniker": "\u53D1\u7968.csproj",
+              "ToolTip": "C:\\Users\\Sleeped\\Desktop\\\u53D1\u7968\u62A5\u9500\u5355\u5904\u7406\\\u53D1\u7968.csproj",
+              "RelativeToolTip": "\u53D1\u7968.csproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-05-26T06:21:19.945Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -32,14 +48,14 @@
               "RelativeDocumentMoniker": "main.cs",
               "ToolTip": "C:\\Users\\Sleeped\\Desktop\\\u53D1\u7968\u62A5\u9500\u5355\u5904\u7406\\main.cs",
               "RelativeToolTip": "main.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAdAAAAAAAAAA==",
+              "ViewState": "AgIAADgBAAAAAAAAAAAMwEwBAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-01-04T11:42:32.349Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "main.cs [\u8BBE\u8BA1]",
               "DocumentMoniker": "C:\\Users\\Sleeped\\Desktop\\\u53D1\u7968\u62A5\u9500\u5355\u5904\u7406\\main.cs",
               "RelativeDocumentMoniker": "main.cs",
