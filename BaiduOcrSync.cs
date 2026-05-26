@@ -14,13 +14,13 @@ namespace 发票
         private DateTime _tokenExpireTime = DateTime.MinValue;
         private static readonly HttpClient _client = new HttpClient();
         private static readonly object _tokenLock = new object();
-        private readonly bool ch = false;
+        private readonly bool _useStandardModel = false;
 
-        public BaiduOcrSync(string apiKey, string secretKey,bool choese=false)
+        public BaiduOcrSync(string apiKey, string secretKey, bool useStandardModel = false)
         {
             _apiKey = apiKey;
             _secretKey = secretKey;
-            ch=true;
+            _useStandardModel = useStandardModel;
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace 发票
             string token = GetAccessToken();
             if (string.IsNullOrEmpty(token)) return "";
             string url = "";
-            if (ch)
+            if (_useStandardModel)
             {
                 url = $"https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic?access_token={token}";
             }

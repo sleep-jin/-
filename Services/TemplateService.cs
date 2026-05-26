@@ -16,46 +16,67 @@ namespace 发票
             _templatesDir = templatesDir;
         }
 
-        public Dictionary<string, List<TemplateItem>> LoadPDFTempleta()
+        /// <summary>
+        /// 加载 PDF 模板配置，返回加载结果和名称列表（不再弹窗打断用户）
+        /// </summary>
+        public Dictionary<string, List<TemplateItem>> LoadPdfTemplates()
         {
             var result = new Dictionary<string, List<TemplateItem>>();
-            if (!Directory.Exists(_templatesDir)) return result;
+            if (!Directory.Exists(_templatesDir))
+            {
+                AppLogger.LogWarn($"模板目录不存在: {_templatesDir}");
+                return result;
+            }
 
-            string modenames = "";
             foreach (var folder in Directory.GetDirectories(_templatesDir))
             {
                 string name = Path.GetFileName(folder);
                 string jsonPath = Path.Combine(folder, $"{name}.json");
                 if (!File.Exists(jsonPath)) continue;
-                string json = File.ReadAllText(jsonPath);
-                var root = JsonSerializer.Deserialize<TemplateConfig>(json);
-                if (root?.Templates != null)
+                try
                 {
-                    result[name] = root.Templates;
+                    string json = File.ReadAllText(jsonPath);
+                    var root = JsonSerializer.Deserialize<TemplateConfig>(json);
+                    if (root?.Templates != null)
+                    {
+                        result[name] = root.Templates;
+                    }
                 }
-                modenames += name + "，";
+                catch (Exception ex)
+                {
+                    AppLogger.LogError($"加载 PDF 模板 {name} 失败: {ex.Message}");
+                }
             }
-            MessageBox.Show($"成功加载：{result.Count}个模板:{modenames.TrimEnd('，')}");
+
+            if (result.Count > 0)
+            {
+                AppLogger.LogInfo($"PDF 模板加载完成，共 {result.Count} 个: {string.Join(", ", result.Keys)}");
+            }
             return result;
         }
-        public Dictionary<string, List<XMLTemplateItem>> LoadXMLTrmoleta()
+
+        /// <summary>
+        /// 加载 XML 模板配置
+        /// </summary>
+        public Dictionary<string, List<XMLTemplateItem>> LoadXmlTemplates()
         {
             var result = new Dictionary<string, List<XMLTemplateItem>>();
-            if (!Directory.Exists(_templatesDir)) return result;
+            if (!Directory.Exists(_templatesDir))
+            {
+                AppLogger.LogWarn($"模板目录不存在: {_templatesDir}");
+                return result;
+            }
 
-            string modenames = "";
             foreach (var folder in Directory.GetDirectories(_templatesDir))
             {
                 string name = Path.GetFileName(folder);
                 string jsonPath = Path.Combine(folder, $"{name}.json");
-
                 if (!File.Exists(jsonPath)) continue;
 
                 try
                 {
                     string json = File.ReadAllText(jsonPath);
                     var items = JsonSerializer.Deserialize<List<XMLTemplateItem>>(json);
-
                     if (items?.Count > 0)
                     {
                         result[name] = items;
@@ -63,17 +84,14 @@ namespace 发票
                 }
                 catch (Exception ex)
                 {
-                    // 记录日志或根据需求处理
-                    Console.WriteLine($"加载节点 {name} 失败: {ex.Message}");
+                    AppLogger.LogError($"加载 XML 模板 {name} 失败: {ex.Message}");
                 }
-                modenames += name + "，";
             }
-            MessageBox.Show($"成功加载：{result.Count}个模板:{modenames.TrimEnd('，')}");
-            return result;
-        }
-        public Dictionary<string, List<TemplateItem>> LoadXMLConfigon() 
-        {
-            var result = new Dictionary<string, List<TemplateItem>>();
+
+            if (result.Count > 0)
+            {
+                AppLogger.LogInfo($"XML 模板加载完成，共 {result.Count} 个: {string.Join(", ", result.Keys)}");
+            }
             return result;
         }
     }

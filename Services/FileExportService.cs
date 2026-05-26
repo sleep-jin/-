@@ -39,13 +39,19 @@ namespace 发票
 
                 try
                 {
-                    if (!File.Exists(src)) throw new FileNotFoundException("源文件不存在", src);
+                    if (!File.Exists(src))
+                    {
+                        AppLogger.LogWarn($"导出跳过，源文件不存在: {src}");
+                        failed++;
+                        continue;
+                    }
                     File.Copy(src, destPath, overwrite);
                     usedNames.Add(destName);
                     success++;
                 }
-                catch
+                catch (Exception ex)
                 {
+                    AppLogger.LogError($"复制文件失败 {src} -> {destPath}: {ex.Message}");
                     failed++;
                 }
             }

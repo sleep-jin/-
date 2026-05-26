@@ -16,6 +16,7 @@ namespace 发票
         public string? exelpath;
         private List<string> _data = new List<string>();
         private int _len = 9;
+        private AppConfig _appConfig = new AppConfig();
         public ExcelShow(Dictionary<string, string> dd, int length)
         {
             InitializeComponent();
@@ -27,7 +28,32 @@ namespace 发票
         }
         private void ExcelShow_Load(object sender, EventArgs e)
         {
+            _appConfig = AppConfig.Load();
+            textBox1.Text = _appConfig.ExcelStartRow.ToString();
+            textBox2.Text = _appConfig.ExcelStartCol.ToString();
+            if (!string.IsNullOrEmpty(_appConfig.ExcelTemplatePath) && File.Exists(_appConfig.ExcelTemplatePath))
+            {
+                textBox4.Text = _appConfig.ExcelTemplatePath;
+                exelpath = _appConfig.ExcelTemplatePath;
+            }
             Creation(_len);
+        }
+
+        /// <summary>
+        /// 窗口关闭时自动保存当前的行列设置
+        /// </summary>
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+            if (int.TryParse(textBox1.Text, out int row) && row >= 1)
+            {
+                _appConfig.ExcelStartRow = row;
+            }
+            if (int.TryParse(textBox2.Text, out int col) && col >= 1)
+            {
+                _appConfig.ExcelStartCol = col;
+            }
+            _appConfig.Save();
         }
         /// <summary>
         /// 创建行列数量
@@ -52,7 +78,16 @@ namespace 发票
         int templateRow = 13;   // 模板所在行（用于复制格式）
         private void InputExcel_Click(object sender, EventArgs e)
         {
-            if (exelpath == null) return;
+            if (string.IsNullOrWhiteSpace(exelpath) || !File.Exists(exelpath))
+            {
+                MessageBox.Show("请先选择有效的 Excel 文件", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            if (_data.Count == 0)
+            {
+                MessageBox.Show("没有数据可导入", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
             ExcelPackage.License.SetNonCommercialPersonal("-继续睡");
             var exfile = new FileInfo(exelpath);
@@ -63,6 +98,16 @@ namespace 发票
             startCol = int.Parse(textBox2.Text);      // 数据起始列
             templateRow = startRow;                    // 假设模板在 startRow 行
             InsertData();
+
+            // 保存用户设置
+            _appConfig.ExcelStartRow = startRow;
+            _appConfig.ExcelStartCol = startCol;
+            if (!string.IsNullOrEmpty(exelpath))
+            {
+                _appConfig.ExcelTemplatePath = exelpath;
+            }
+            _appConfig.Save();
+
             MessageBox.Show("写入完成");
         }
         private ExcelWorksheet? ws;
@@ -72,8 +117,8 @@ namespace 发票
         /// </summary>
         /// <param name="str"></param>
         public void InsertData()
-            {
-                if (ws == null || _data.Count == 0) return;
+        {
+            if (ws == null || _data.Count == 0) return;
 
             // 从最后一行开始往前插入，这样前面的行号不会变
             for (int i = _data.Count - 1; i >= 0; i--)
@@ -100,11 +145,30 @@ namespace 发票
         }
         private void button3_Click(object sender, EventArgs e)
         {
-            OpenFileDialog fileDialog = new OpenFileDialog();
+            using OpenFileDialog fileDialog = new OpenFileDialog
+            {
+                Filter = "Excel 文件|*.xlsx;*.xls",
+                Title = "选择 Excel 模板文件"
+            };
+
+            // 定位到上次路径的上一层，方便快速找到表格
+            if (!string.IsNullOrEmpty(_appConfig.ExcelTemplatePath))
+            {
+                string? lastDir = Path.GetDirectoryName(_appConfig.ExcelTemplatePath);
+                if (!string.IsNullOrEmpty(lastDir) && Directory.Exists(lastDir))
+                {
+                    fileDialog.InitialDirectory = lastDir;
+                }
+            }
+
             if (fileDialog.ShowDialog() == DialogResult.OK)
             {
                 textBox4.Text = fileDialog.FileName;
                 exelpath = fileDialog.FileName;
+
+                // 自动保存路径
+                _appConfig.ExcelTemplatePath = fileDialog.FileName;
+                _appConfig.Save();
             }
         }
     }

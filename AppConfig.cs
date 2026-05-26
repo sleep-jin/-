@@ -9,6 +9,9 @@ namespace 发票
     {
         public string ApiKey { get; set; } = "";
         public string SecretKey { get; set; } = "";
+        public int ExcelStartRow { get; set; } = 13;
+        public int ExcelStartCol { get; set; } = 1;
+        public string ExcelTemplatePath { get; set; } = "";
 
         private static readonly string ConfigPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "appconfig.json");
 

@@ -44,7 +44,6 @@ namespace 发票
             outPDF = new Sunny.UI.UIButton();
             button4 = new Sunny.UI.UIButton();
             textBox2 = new Sunny.UI.UITextBox();
-            label1 = new Label();
             PDFfomat = new Sunny.UI.UITextBox();
             label2 = new Label();
             label3 = new Label();
@@ -70,6 +69,7 @@ namespace 发票
             label7 = new Label();
             LoadTemplate = new Sunny.UI.UIButton();
             使用说明 = new Sunny.UI.UIButton();
+            InputExcel = new Sunny.UI.UIButton();
             ((System.ComponentModel.ISupportInitialize)PDFdata).BeginInit();
             SuspendLayout();
             // 
@@ -118,7 +118,7 @@ namespace 发票
             // Start
             // 
             Start.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            Start.Location = new Point(473, 168);
+            Start.Location = new Point(495, 168);
             Start.Margin = new Padding(5, 4, 5, 4);
             Start.MinimumSize = new Size(1, 1);
             Start.Name = "Start";
@@ -160,7 +160,7 @@ namespace 发票
             // testMode
             // 
             testMode.AutoSize = true;
-            testMode.Location = new Point(284, 279);
+            testMode.Location = new Point(320, 172);
             testMode.Name = "testMode";
             testMode.Size = new Size(132, 28);
             testMode.TabIndex = 14;
@@ -170,12 +170,12 @@ namespace 发票
             // outPDF
             // 
             outPDF.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            outPDF.Location = new Point(320, 168);
+            outPDF.Location = new Point(288, 280);
             outPDF.Margin = new Padding(5, 4, 5, 4);
             outPDF.MinimumSize = new Size(1, 1);
             outPDF.Name = "outPDF";
             outPDF.Radius = 15;
-            outPDF.Size = new Size(143, 32);
+            outPDF.Size = new Size(138, 24);
             outPDF.TabIndex = 16;
             outPDF.Text = "导出新PDF";
             outPDF.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point, 134);
@@ -208,15 +208,6 @@ namespace 发票
             textBox2.TabIndex = 3;
             textBox2.TextAlignment = ContentAlignment.MiddleLeft;
             textBox2.Watermark = "";
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new Point(422, 280);
-            label1.Name = "label1";
-            label1.Size = new Size(226, 24);
-            label1.TabIndex = 19;
-            label1.Text = "根据模板显示格式：";
             // 
             // PDFfomat
             // 
@@ -561,10 +552,25 @@ namespace 发票
             使用说明.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point, 134);
             使用说明.Click += 使用说明_Click;
             // 
+            // InputExcel
+            // 
+            InputExcel.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point, 134);
+            InputExcel.Location = new Point(449, 280);
+            InputExcel.Margin = new Padding(5, 4, 5, 4);
+            InputExcel.MinimumSize = new Size(1, 1);
+            InputExcel.Name = "InputExcel";
+            InputExcel.Radius = 15;
+            InputExcel.Size = new Size(138, 24);
+            InputExcel.TabIndex = 42;
+            InputExcel.Text = "导入表格";
+            InputExcel.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point, 134);
+            InputExcel.Click += InputExcel_Click;
+            // 
             // main
             // 
             AutoScaleMode = AutoScaleMode.None;
             ClientSize = new Size(1197, 733);
+            Controls.Add(InputExcel);
             Controls.Add(使用说明);
             Controls.Add(LoadTemplate);
             Controls.Add(label7);
@@ -587,7 +593,6 @@ namespace 发票
             Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(PDFfomat);
-            Controls.Add(label1);
             Controls.Add(button4);
             Controls.Add(outPDF);
             Controls.Add(testMode);
@@ -621,7 +626,6 @@ namespace 发票
         private Sunny.UI.UIButton outPDF;
         private Sunny.UI.UIButton button4;
         private Sunny.UI.UITextBox textBox2;
-        private Label label1;
         private Sunny.UI.UITextBox PDFfomat;
         private Label label2;
         private Label label3;
@@ -647,5 +651,6 @@ namespace 发票
         private Label label7;
         private Sunny.UI.UIButton LoadTemplate;
         private Sunny.UI.UIButton 使用说明;
+        private Sunny.UI.UIButton InputExcel;
     }
 }
