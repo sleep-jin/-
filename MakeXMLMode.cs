@@ -11,8 +11,8 @@ namespace 发票
     {
         string _xmlPath;
         string _className;
-        string _dcrition;
-        XDocument _doc;
+        string _directory;
+        XDocument? _xDocument;
         /// <summary>
         /// 初始化一个用于生成或处理 XML 的 MakeXMLMode 实例。
         /// </summary>
@@ -20,34 +20,34 @@ namespace 发票
         /// <param name="xmlPath" 文件路径>目标 XML 文件的路径。</param>
         /// <param name="className" >要生成或处理的类名。</param>
         /// <param name="dcrition">文件夹。</param>
-        public MakeXMLMode(string xmlPath, string className, string dcrition)
+        public MakeXMLMode(string xmlPath, string className, string directory)
         {
             InitializeComponent();
             _xmlPath = xmlPath;
             _className = className;
-            _dcrition = dcrition;
+            _directory = directory;
         }
 
-        private void MakeXMLMode_Load(object sender, EventArgs e)
+        private void MakeXmlMode_Load(object sender, EventArgs e)
         {
-            _doc = XDocument.Load(_xmlPath);
+            _xDocument = XDocument.Load(_xmlPath);
 
             // 读取 XML 中所有路径和值
             XMLGridView.Rows.Clear();
-            foreach (var element in _doc.Root.Elements())
+            foreach (var element in _xDocument.Root.Elements())
             {
                 TraverseElement(element, element.Name.LocalName);
             }
 
             // 加载已保存的配置
             jsonGridView.Rows.Clear();
-            string path = Path.Combine(_dcrition, _className, _className+".json");
+            string path = Path.Combine(_directory, _className, _className + ".json");
             if (File.Exists(path))
             {
                 string json = File.ReadAllText(path);
-                List<XMLTemplateItem> items = JsonSerializer.Deserialize<List<XMLTemplateItem>>(json);
+                List<XMLTemplateItem>? items = JsonSerializer.Deserialize<List<XMLTemplateItem>>(json);
 
-                foreach (var item in items)
+                foreach (var item in items ?? new List<XMLTemplateItem>())
                 {
                     jsonGridView.Rows.Add(item.ClassName, item.XPath, ReadXPath(item.XPath));
                 }
@@ -61,9 +61,10 @@ namespace 发票
         {
             try
             {
+                if (_xDocument == null) return string.Empty;
                 if (xpath.Contains("/@"))
                 {
-                    var result = _doc.XPathEvaluate(xpath);
+                    var result = _xDocument.XPathEvaluate(xpath);
                     if (result is IEnumerable<object> enumerable)
                     {
                         var first = enumerable.FirstOrDefault();
@@ -73,7 +74,7 @@ namespace 发票
                 }
                 else
                 {
-                    var element = _doc.XPathSelectElement(xpath);
+                    var element = _xDocument.XPathSelectElement(xpath);
                     return element?.Value ?? string.Empty;
                 }
             }
@@ -115,7 +116,7 @@ namespace 发票
         /// <summary>
         /// 添加选中行到配置表
         /// </summary>
-        private void addPort_Click(object sender, EventArgs e)
+        private void AddNodeButton_Click(object sender, EventArgs e)
         {
             // DataGridView 用 SelectedRows 或 CurrentRow，没有 SelectedIndex
             if (XMLGridView.SelectedRows.Count > 0)
@@ -144,7 +145,7 @@ namespace 发票
         /// <summary>
         /// 删除配置表选中行
         /// </summary>
-        private void deletePort_Click(object sender, EventArgs e)
+        private void DeleteNodeButton_Click(object sender, EventArgs e)
         {
             if (jsonGridView.SelectedRows.Count > 0)
             {
@@ -166,7 +167,7 @@ namespace 发票
         /// <summary>
         /// 保存配置到 JSON
         /// </summary>
-        private void saveJson_Click(object sender, EventArgs e)
+        private void SaveJsonButton_Click(object sender, EventArgs e)
         {
             List<XMLTemplateItem> items = new List<XMLTemplateItem>();
 
@@ -176,14 +177,14 @@ namespace 发票
                 if (row.IsNewRow) continue;
 
                 // 用 Cells[index].Value 读取单元格值
-                string claName = row.Cells[0].Value?.ToString() ?? "";
+                string className = row.Cells[0].Value?.ToString() ?? "";
                 string xpath = row.Cells[1].Value?.ToString() ?? "";
 
-                if (!string.IsNullOrWhiteSpace(claName) && !string.IsNullOrWhiteSpace(xpath))
+                if (!string.IsNullOrWhiteSpace(className) && !string.IsNullOrWhiteSpace(xpath))
                 {
                     items.Add(new XMLTemplateItem
                     {
-                        ClassName = claName,
+                        ClassName = className,
                         XPath = xpath
                     });
                 }
@@ -197,10 +198,10 @@ namespace 发票
             };
 
             string json = JsonSerializer.Serialize(items, options);
-            string filePath = Path.Combine(_dcrition, _className, _className+".json");
+            string filePath = Path.Combine(_directory, _className, _className + ".json");
 
             // 确保目录存在
-            Directory.CreateDirectory(_dcrition);
+            Directory.CreateDirectory(_directory);
             File.WriteAllText(filePath, json, System.Text.Encoding.UTF8);
 
             UIMessageBox.Show("保存成功", "提示", UIStyle.Green);

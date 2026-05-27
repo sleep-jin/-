@@ -1,7 +1,7 @@
 ﻿
 namespace 发票
 {
-    partial class main
+    partial class MainForm
     {
         /// <summary>
         ///  Required designer variable.
@@ -99,7 +99,7 @@ namespace 发票
             MakeMode.TabIndex = 8;
             MakeMode.Text = "制作模板";
             MakeMode.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            MakeMode.Click += MakeMode_Click;
+            MakeMode.Click += MakeTemplateButton_Click;
             // 
             // 编辑分类
             // 
@@ -113,7 +113,7 @@ namespace 发票
             编辑分类.TabIndex = 10;
             编辑分类.Text = "编辑分类";
             编辑分类.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            编辑分类.Click += 编辑分类_Click;
+            编辑分类.Click += EditCategoryButton_Click;
             // 
             // Start
             // 
@@ -126,7 +126,7 @@ namespace 发票
             Start.TabIndex = 11;
             Start.Text = " 开始识别";
             Start.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            Start.Click += Start_Click;
+            Start.Click += StartRecognizeButton_Click;
             // 
             // txtFomatbox
             // 
@@ -155,16 +155,16 @@ namespace 发票
             setTXTFomat.TabIndex = 13;
             setTXTFomat.Text = "设置格式";
             setTXTFomat.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            setTXTFomat.Click += setTXTFomat_Click;
+            setTXTFomat.Click += SetFormatButton_Click;
             // 
             // testMode
             // 
             testMode.AutoSize = true;
             testMode.Location = new Point(320, 172);
             testMode.Name = "testMode";
-            testMode.Size = new Size(132, 28);
+            testMode.Size = new Size(122, 20);
             testMode.TabIndex = 14;
-            testMode.Text = "调试模板";
+            testMode.Text = "调试模板匹配";
             testMode.UseVisualStyleBackColor = true;
             // 
             // outPDF
@@ -179,7 +179,7 @@ namespace 发票
             outPDF.TabIndex = 16;
             outPDF.Text = "导出新PDF";
             outPDF.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            outPDF.Click += outPDF_Click;
+            outPDF.Click += ExportPdfButton_Click;
             // 
             // button4
             // 
@@ -193,7 +193,7 @@ namespace 发票
             button4.TabIndex = 18;
             button4.Text = "预览表格";
             button4.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            button4.Click += button4_Click;
+            button4.Click += PreviewButton_Click;
             // 
             // textBox2
             // 
@@ -230,7 +230,7 @@ namespace 发票
             label2.Font = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point, 134);
             label2.Location = new Point(164, 209);
             label2.Name = "label2";
-            label2.Size = new Size(98, 18);
+            label2.Size = new Size(65, 12);
             label2.TabIndex = 21;
             label2.Text = "表格的格式";
             // 
@@ -240,7 +240,7 @@ namespace 发票
             label3.Font = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point, 134);
             label3.Location = new Point(167, 243);
             label3.Name = "label3";
-            label3.Size = new Size(89, 18);
+            label3.Size = new Size(59, 12);
             label3.TabIndex = 22;
             label3.Text = "PDF的格式";
             // 
@@ -258,7 +258,7 @@ namespace 发票
             textBox3.TabIndex = 23;
             textBox3.TextAlignment = ContentAlignment.MiddleLeft;
             textBox3.Watermark = "";
-            textBox3.TextChanged += textBox3_TextChanged;
+            textBox3.TextChanged += ApiKeyTextBox_TextChanged;
             // 
             // textBox4
             // 
@@ -274,39 +274,39 @@ namespace 发票
             textBox4.TabIndex = 24;
             textBox4.TextAlignment = ContentAlignment.MiddleLeft;
             textBox4.Watermark = "";
-            textBox4.TextChanged += textBox3_TextChanged;
+            textBox4.TextChanged += ApiKeyTextBox_TextChanged;
             // 
             // label4
             // 
             label4.AutoSize = true;
             label4.Location = new Point(395, 601);
             label4.Name = "label4";
-            label4.Size = new Size(166, 24);
+            label4.Size = new Size(111, 16);
             label4.TabIndex = 25;
             label4.Text = "BAIDU_API_KEY";
             // 
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(385, 633);
+            label5.Location = new Point(395, 633);
             label5.Name = "label5";
-            label5.Size = new Size(202, 24);
+            label5.Size = new Size(135, 16);
             label5.TabIndex = 26;
             label5.Text = "BAIDU_SECRET_KEY";
             // 
             // progressBar1
             // 
-            progressBar1.Location = new Point(14, 678);
+            progressBar1.Location = new Point(654, 45);
             progressBar1.Name = "progressBar1";
-            progressBar1.Size = new Size(471, 25);
+            progressBar1.Size = new Size(415, 25);
             progressBar1.TabIndex = 27;
             // 
             // lblProgress
             // 
             lblProgress.AutoSize = true;
-            lblProgress.Location = new Point(495, 680);
+            lblProgress.Location = new Point(1093, 46);
             lblProgress.Name = "lblProgress";
-            lblProgress.Size = new Size(70, 24);
+            lblProgress.Size = new Size(47, 16);
             lblProgress.TabIndex = 28;
             lblProgress.Text = "0 / 0";
             // 
@@ -352,7 +352,7 @@ namespace 发票
             listBox1.Size = new Size(143, 327);
             listBox1.TabIndex = 31;
             listBox1.Text = "uiListBox1";
-            listBox1.SelectedIndexChanged += listBox1_SelectedIndexChanged;
+            listBox1.SelectedIndexChanged += TemplateListBox_SelectedIndexChanged;
             // 
             // button1
             // 
@@ -365,7 +365,7 @@ namespace 发票
             button1.TabIndex = 32;
             button1.Text = "选择发票文件夹";
             button1.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            button1.Click += button1_Click;
+            button1.Click += SelectFolderButton_Click;
             // 
             // Button2
             // 
@@ -378,7 +378,7 @@ namespace 发票
             Button2.TabIndex = 33;
             Button2.Text = "选择发票导出位置";
             Button2.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            Button2.Click += button2_Click;
+            Button2.Click += SelectOutputButton_Click;
             // 
             // PDFdata
             // 
@@ -410,7 +410,7 @@ namespace 发票
             PDFdata.EnableHeadersVisualStyles = false;
             PDFdata.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point, 134);
             PDFdata.GridColor = Color.FromArgb(80, 160, 255);
-            PDFdata.Location = new Point(654, 39);
+            PDFdata.Location = new Point(654, 76);
             PDFdata.MultiSelect = false;
             PDFdata.Name = "PDFdata";
             PDFdata.RowHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
@@ -427,7 +427,7 @@ namespace 发票
             dataGridViewCellStyle5.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point, 134);
             PDFdata.RowsDefaultCellStyle = dataGridViewCellStyle5;
             PDFdata.SelectedIndex = -1;
-            PDFdata.Size = new Size(540, 666);
+            PDFdata.Size = new Size(540, 592);
             PDFdata.StripeEvenColor = Color.Honeydew;
             PDFdata.StripeOddColor = Color.FromArgb(192, 255, 255);
             PDFdata.TabIndex = 34;
@@ -459,11 +459,11 @@ namespace 发票
             checkBox1.CheckState = CheckState.Checked;
             checkBox1.Location = new Point(506, 550);
             checkBox1.Name = "checkBox1";
-            checkBox1.Size = new Size(132, 28);
+            checkBox1.Size = new Size(90, 20);
             checkBox1.TabIndex = 35;
             checkBox1.Text = "存储密钥";
             checkBox1.UseVisualStyleBackColor = true;
-            checkBox1.CheckedChanged += checkBox1_CheckedChanged;
+            checkBox1.CheckedChanged += SaveKeyCheckBox_CheckedChanged;
             // 
             // FileClass
             // 
@@ -484,14 +484,14 @@ namespace 发票
             FileClass.Text = "PDF";
             FileClass.TextAlignment = ContentAlignment.MiddleLeft;
             FileClass.Watermark = "";
-            FileClass.SelectedIndexChanged += FileClass_SelectedIndexChanged;
+            FileClass.SelectedIndexChanged += FileTypeComboBox_SelectedIndexChanged;
             // 
             // label6
             // 
             label6.AutoSize = true;
             label6.Location = new Point(14, 128);
             label6.Name = "label6";
-            label6.Size = new Size(106, 24);
+            label6.Size = new Size(71, 16);
             label6.TabIndex = 37;
             label6.Text = "文件类型";
             // 
@@ -513,14 +513,14 @@ namespace 发票
             ModeName.TabIndex = 37;
             ModeName.TextAlignment = ContentAlignment.MiddleLeft;
             ModeName.Watermark = "";
-            ModeName.SelectedIndexChanged += ModeName_SelectedIndexChanged;
+            ModeName.SelectedIndexChanged += TemplateModeComboBox_SelectedIndexChanged;
             // 
             // label7
             // 
             label7.AutoSize = true;
             label7.Location = new Point(261, 128);
             label7.Name = "label7";
-            label7.Size = new Size(106, 24);
+            label7.Size = new Size(71, 16);
             label7.TabIndex = 38;
             label7.Text = "模板类型";
             // 
@@ -536,7 +536,7 @@ namespace 发票
             LoadTemplate.TabIndex = 40;
             LoadTemplate.Text = "加载模板";
             LoadTemplate.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            LoadTemplate.Click += LoadTemplate_Click;
+            LoadTemplate.Click += LoadTemplateButton_Click;
             // 
             // 使用说明
             // 
@@ -550,7 +550,7 @@ namespace 发票
             使用说明.TabIndex = 41;
             使用说明.Text = "使用说明";
             使用说明.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            使用说明.Click += 使用说明_Click;
+            使用说明.Click += HelpButton_Click;
             // 
             // InputExcel
             // 
@@ -564,12 +564,12 @@ namespace 发票
             InputExcel.TabIndex = 42;
             InputExcel.Text = "导入表格";
             InputExcel.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            InputExcel.Click += InputExcel_Click;
+            InputExcel.Click += ImportExcelButton_Click;
             // 
-            // main
+            // MainForm
             // 
             AutoScaleMode = AutoScaleMode.None;
-            ClientSize = new Size(1197, 733);
+            ClientSize = new Size(1210, 682);
             Controls.Add(InputExcel);
             Controls.Add(使用说明);
             Controls.Add(LoadTemplate);
@@ -603,10 +603,10 @@ namespace 发票
             Controls.Add(MakeMode);
             Controls.Add(textBox2);
             Controls.Add(textBox1);
-            Name = "main";
+            Name = "MainForm";
             Text = "Form1";
             ZoomScaleRect = new Rectangle(22, 22, 1197, 708);
-            Load += Form1_Load;
+            Load += MainForm_Load;
             ((System.ComponentModel.ISupportInitialize)PDFdata).EndInit();
             ResumeLayout(false);
             PerformLayout();

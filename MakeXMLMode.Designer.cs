@@ -39,17 +39,17 @@
             DataGridViewCellStyle dataGridViewCellStyle9 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle10 = new DataGridViewCellStyle();
             XMLGridView = new Sunny.UI.UIDataGridView();
-            节点 = new DataGridViewTextBoxColumn();
-            结果 = new DataGridViewTextBoxColumn();
             jsonGridView = new Sunny.UI.UIDataGridView();
-            名称 = new DataGridViewTextBoxColumn();
-            Column1 = new DataGridViewTextBoxColumn();
-            Column2 = new DataGridViewTextBoxColumn();
             uiLabel1 = new Sunny.UI.UILabel();
             addPort = new Sunny.UI.UIButton();
             deletePort = new Sunny.UI.UIButton();
             saveJson = new Sunny.UI.UIButton();
             uiLabel2 = new Sunny.UI.UILabel();
+            节点 = new DataGridViewTextBoxColumn();
+            结果 = new DataGridViewTextBoxColumn();
+            名称 = new DataGridViewTextBoxColumn();
+            Column1 = new DataGridViewTextBoxColumn();
+            Column2 = new DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)XMLGridView).BeginInit();
             ((System.ComponentModel.ISupportInitialize)jsonGridView).BeginInit();
             SuspendLayout();
@@ -104,20 +104,6 @@
             XMLGridView.StripeOddColor = Color.FromArgb(235, 243, 255);
             XMLGridView.TabIndex = 0;
             // 
-            // 节点
-            // 
-            节点.HeaderText = "节点";
-            节点.MinimumWidth = 8;
-            节点.Name = "节点";
-            节点.Width = 450;
-            // 
-            // 结果
-            // 
-            结果.HeaderText = "值";
-            结果.MinimumWidth = 8;
-            结果.Name = "结果";
-            结果.Width = 450;
-            // 
             // jsonGridView
             // 
             jsonGridView.AllowUserToAddRows = false;
@@ -168,27 +154,6 @@
             jsonGridView.StripeOddColor = Color.FromArgb(235, 243, 255);
             jsonGridView.TabIndex = 1;
             // 
-            // 名称
-            // 
-            名称.HeaderText = "名称";
-            名称.MinimumWidth = 8;
-            名称.Name = "名称";
-            名称.Width = 150;
-            // 
-            // Column1
-            // 
-            Column1.HeaderText = "节点";
-            Column1.MinimumWidth = 8;
-            Column1.Name = "Column1";
-            Column1.Width = 450;
-            // 
-            // Column2
-            // 
-            Column2.HeaderText = "值";
-            Column2.MinimumWidth = 8;
-            Column2.Name = "Column2";
-            Column2.Width = 300;
-            // 
             // uiLabel1
             // 
             uiLabel1.BackColor = Color.FromArgb(0, 192, 0);
@@ -212,7 +177,7 @@
             addPort.TabIndex = 3;
             addPort.Text = "添加节点";
             addPort.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            addPort.Click += addPort_Click;
+            addPort.Click += AddNodeButton_Click;
             // 
             // deletePort
             // 
@@ -225,7 +190,7 @@
             deletePort.TabIndex = 4;
             deletePort.Text = "删除节点";
             deletePort.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            deletePort.Click += deletePort_Click;
+            deletePort.Click += DeleteNodeButton_Click;
             // 
             // saveJson
             // 
@@ -238,7 +203,7 @@
             saveJson.TabIndex = 5;
             saveJson.Text = "保存";
             saveJson.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            saveJson.Click += saveJson_Click;
+            saveJson.Click += SaveJsonButton_Click;
             // 
             // uiLabel2
             // 
@@ -251,6 +216,41 @@
             uiLabel2.TabIndex = 6;
             uiLabel2.Text = "模板结点";
             uiLabel2.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // 节点
+            // 
+            节点.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            节点.HeaderText = "节点";
+            节点.MinimumWidth = 8;
+            节点.Name = "节点";
+            // 
+            // 结果
+            // 
+            结果.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            结果.HeaderText = "值";
+            结果.MinimumWidth = 8;
+            结果.Name = "结果";
+            // 
+            // 名称
+            // 
+            名称.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            名称.HeaderText = "名称";
+            名称.MinimumWidth = 8;
+            名称.Name = "名称";
+            // 
+            // Column1
+            // 
+            Column1.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            Column1.HeaderText = "节点";
+            Column1.MinimumWidth = 8;
+            Column1.Name = "Column1";
+            // 
+            // Column2
+            // 
+            Column2.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            Column2.HeaderText = "值";
+            Column2.MinimumWidth = 8;
+            Column2.Name = "Column2";
             // 
             // MakeXMLMode
             // 
@@ -266,7 +266,7 @@
             Name = "MakeXMLMode";
             Text = "XMLtempleta";
             ZoomScaleRect = new Rectangle(22, 22, 1133, 988);
-            Load += MakeXMLMode_Load;
+            Load += MakeXmlMode_Load;
             ((System.ComponentModel.ISupportInitialize)XMLGridView).EndInit();
             ((System.ComponentModel.ISupportInitialize)jsonGridView).EndInit();
             ResumeLayout(false);
@@ -275,14 +275,14 @@
         #endregion
 
         private Sunny.UI.UIDataGridView XMLGridView;
-        private DataGridViewTextBoxColumn 节点;
-        private DataGridViewTextBoxColumn 结果;
         private Sunny.UI.UIDataGridView jsonGridView;
         private Sunny.UI.UILabel uiLabel1;
         private Sunny.UI.UIButton addPort;
         private Sunny.UI.UIButton deletePort;
         private Sunny.UI.UIButton saveJson;
         private Sunny.UI.UILabel uiLabel2;
+        private DataGridViewTextBoxColumn 节点;
+        private DataGridViewTextBoxColumn 结果;
         private DataGridViewTextBoxColumn 名称;
         private DataGridViewTextBoxColumn Column1;
         private DataGridViewTextBoxColumn Column2;

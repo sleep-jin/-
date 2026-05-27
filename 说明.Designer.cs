@@ -52,7 +52,7 @@
             // 
             uiListBox2.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point, 134);
             uiListBox2.HoverColor = Color.FromArgb(155, 200, 255);
-            uiListBox2.Items.AddRange(new object[] { "使用说明：", "1先加载XML文件或者PDF文件（不支持混合）", "2编辑发票类型填入对应的类型", "3选择好发票类型", "4制作模板并保存", "5选择好文件类型和模板类型加载模板", "6填写对应类型的字符格式", "7识别并导出", "", "注意：", "1切换发票类型需要手动重新加载", "2字符格式的编号值不能超过对应模板的数量", "3模板类型添加需要在模板类型选择框是空的时候去添加（这个框是可编辑的）", "", "", "", "下载地址：", "https://github.com/sleep-jin/Reimbursement-form" });
+            uiListBox2.Items.AddRange(new object[] { "使用说明：", "1先加载XML文件或者PDF文件（不支持混合）", "2编辑发票类型填入对应的类型", "3选择好发票类型和对应的发票", "4制作模板并保存", "5选择好文件类型和模板类型加载模板", "6填写对应类型的字符格式", "7识别并导出", "", "注意：", "1切换发票类型需要手动重新加载", "2字符格式的编号值不能超过对应模板的数量", "3模板类型添加需要在模板类型选择框是空的时候去添加（模板类型框可以手动删除文本）", "", "", "", "", "下载地址：", "https://github.com/sleep-jin/Reimbursement-form" });
             uiListBox2.ItemSelectForeColor = Color.White;
             uiListBox2.Location = new Point(576, 40);
             uiListBox2.Margin = new Padding(4, 5, 4, 5);
@@ -67,7 +67,7 @@
             // 说明
             // 
             AutoScaleMode = AutoScaleMode.None;
-            ClientSize = new Size(1426, 706);
+            ClientSize = new Size(1426, 610);
             Controls.Add(uiListBox2);
             Controls.Add(uiListBox1);
             Name = "说明";

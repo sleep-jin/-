@@ -134,5 +134,5 @@ C:\Users\Sleeped\Desktop\发票报销单处理\obj\Debug\net8.0-windows7.0\发�
 C:\Users\Sleeped\Desktop\发票报销单处理\obj\Debug\net8.0-windows7.0\发票.genruntimeconfig.cache
 C:\Users\Sleeped\Desktop\发票报销单处理\obj\Debug\net8.0-windows7.0\ref\发票.dll
 C:\Users\Sleeped\Desktop\发票报销单处理\obj\Debug\net8.0-windows7.0\发票.MakeXMLMode.resources
-C:\Users\Sleeped\Desktop\发票报销单处理\obj\Debug\net8.0-windows7.0\发票.main.resources
 C:\Users\Sleeped\Desktop\发票报销单处理\obj\Debug\net8.0-windows7.0\发票.说明.resources
+C:\Users\Sleeped\Desktop\发票报销单处理\obj\Debug\net8.0-windows7.0\发票.MainForm.resources

@@ -11,18 +11,18 @@ namespace 发票
 {
     public partial class MakeModes : UIForm
     {
-        private ZoomImageBox zoomBox = null!;
-        private List<TemplateInfo> templates = new List<TemplateInfo>();
-        string FileName = "";
-        string TemplatePath = "";
+        private ZoomImageBox _zoomImageBox = null!;
+        private List<TemplateInfo> _templateInfos = new List<TemplateInfo>();
+        string _fileName = "";
+        string _templatePath = "";
         private enum SelectMode
         {
             None,
             SelectTemplate,
             SelectROI
         }
-        private SelectMode currentMode = SelectMode.None;
-        private TemplateInfo? currentTemplate;
+        private SelectMode _currentSelectMode = SelectMode.None;
+        private TemplateInfo? _currentTemplate;
 
         public class TemplateInfo
         {
@@ -33,10 +33,10 @@ namespace 发票
             public Image? TemplateImage { get; set; }
         }
 
-        public MakeModes(Image image, string classnaem,string templatePath)
+        public MakeModes(Image image, string className,string templatePath)
         {
-            FileName = classnaem;
-            TemplatePath= templatePath;
+            _fileName = className;
+            _templatePath = templatePath;
             InitializeComponent();
 
             if (groupBox1 == null)
@@ -45,36 +45,36 @@ namespace 发票
                 return;
             }
 
-            zoomBox = new ZoomImageBox
+            _zoomImageBox = new ZoomImageBox
             {
                 Dock = DockStyle.Fill
             };
 
-            zoomBox.SelectionCompleted += ZoomBox_SelectionCompleted;
+            _zoomImageBox.SelectionCompleted += ZoomBox_SelectionCompleted;
 
-            groupBox1.Controls.Add(zoomBox);
+            groupBox1.Controls.Add(_zoomImageBox);
             groupBox1.PerformLayout();
 
-            this.Load += (s, e) => zoomBox.SetImage(image);
+            this.Load += (s, e) => _zoomImageBox.SetImage(image);
             if (this.IsHandleCreated)
-                zoomBox.SetImage(image);
+                _zoomImageBox.SetImage(image);
         }
 
         private void ZoomBox_SelectionCompleted(object? sender, EventArgs e)
         {
-            Rectangle imgRect = zoomBox.SelectedImageRect;
+            Rectangle imgRect = _zoomImageBox.SelectedImageRect;
 
-            switch (currentMode)
+            switch (_currentSelectMode)
             {
                 case SelectMode.SelectTemplate:
                     HandleTemplateSelection(imgRect);
                     break;
                 case SelectMode.SelectROI:
-                    HandleROISelection(imgRect);
+                    HandleRoiSelection(imgRect);
                     break;
             }
 
-            zoomBox.ClearSelection();
+            _zoomImageBox.ClearSelection();
         }
 
         private void HandleTemplateSelection(Rectangle templateRect)
@@ -94,16 +94,16 @@ namespace 发票
 
             if (result != DialogResult.Yes)
             {
-                currentMode = SelectMode.None;
+                _currentSelectMode = SelectMode.None;
                 return;
             }
 
             // 截取模板图像（用于表格显示）
-            if (zoomBox.Image == null) return;
-            Image? templateImage = CropImage(zoomBox.Image, templateRect);
+            if (_zoomImageBox.Image == null) return;
+            Image? templateImage = CropImage(_zoomImageBox.Image, templateRect);
             if (templateImage == null) return;
 
-            currentTemplate = new TemplateInfo
+            _currentTemplate = new TemplateInfo
             {
                 TemplateRect = templateRect,
                 TemplateImage = templateImage,
@@ -111,8 +111,8 @@ namespace 发票
                 ClassName = "默认分类"
             };
 
-            currentMode = SelectMode.SelectROI;
-            zoomBox.SetHighlightRect(templateRect);
+            _currentSelectMode = SelectMode.SelectROI;
+            _zoomImageBox.SetHighlightRect(templateRect);
 
             MessageBox.Show(
                 "请框选 ROI 区域\n\n" +
@@ -122,7 +122,7 @@ namespace 发票
                 MessageBoxIcon.Information);
         }
 
-        private void HandleROISelection(Rectangle roiRect)
+        private void HandleRoiSelection(Rectangle roiRect)
         {
             if (roiRect.Width < 5 || roiRect.Height < 5)
             {
@@ -131,14 +131,14 @@ namespace 发票
             }
 
             // 计算相对坐标
-            int relativeX = roiRect.X - currentTemplate.TemplateRect.X;
-            int relativeY = roiRect.Y - currentTemplate.TemplateRect.Y;
+            int relativeX = roiRect.X - _currentTemplate.TemplateRect.X;
+            int relativeY = roiRect.Y - _currentTemplate.TemplateRect.Y;
 
             Rectangle finalROI = new Rectangle(relativeX, relativeY, roiRect.Width, roiRect.Height);
 
             var result = MessageBox.Show(
-                $"模板区域: {currentTemplate.TemplateRect.X},{currentTemplate.TemplateRect.Y}, " +
-                $"{currentTemplate.TemplateRect.Width},{currentTemplate.TemplateRect.Height}\n\n" +
+                $"模板区域: {_currentTemplate.TemplateRect.X},{_currentTemplate.TemplateRect.Y}, " +
+                $"{_currentTemplate.TemplateRect.Width},{_currentTemplate.TemplateRect.Height}\n\n" +
                 $"ROI 原始: {roiRect.X},{roiRect.Y}, {roiRect.Width},{roiRect.Height}\n" +
                 $"相对偏移: {relativeX},{relativeY}\n\n" +
                 $"最终填入 ROI: {finalROI.X},{finalROI.Y}, {finalROI.Width},{finalROI.Height}\n\n" +
@@ -150,18 +150,18 @@ namespace 发票
             if (result == DialogResult.Yes)
             {
                 // 只设置 ROI 字符串，Image 已经在 HandleTemplateSelection 中设置好了
-                currentTemplate.ROI = $"{finalROI.X},{finalROI.Y},{finalROI.Width},{finalROI.Height}";
+                _currentTemplate.ROI = $"{finalROI.X},{finalROI.Y},{finalROI.Width},{finalROI.Height}";
 
-                templates.Add(currentTemplate);
-                AddToDataGridView(currentTemplate);
+                _templateInfos.Add(_currentTemplate);
+                AddTemplateToGrid(_currentTemplate);
             }
 
-            currentMode = SelectMode.None;
-            currentTemplate = null;
-            zoomBox.ClearHighlight();
+            _currentSelectMode = SelectMode.None;
+            _currentTemplate = null;
+            _zoomImageBox.ClearHighlight();
         }
 
-        private void AddToDataGridView(TemplateInfo template)
+        private void AddTemplateToGrid(TemplateInfo template)
         {
             int rowIndex = dataGridView1.Rows.Add();
             dataGridView1.Rows[rowIndex].Cells["Column1"].Value = template.Image;
@@ -181,15 +181,15 @@ namespace 发票
             return bmp;
         }
 
-        private void add_Click(object sender, EventArgs e)
+        private void AddTemplateButton_Click(object sender, EventArgs e)
         {
-            if (currentMode != SelectMode.None)
+            if (_currentSelectMode != SelectMode.None)
             {
                 MessageBox.Show("正在选择中，请先完成当前操作", "提示");
                 return;
             }
 
-            currentMode = SelectMode.SelectTemplate;
+            _currentSelectMode = SelectMode.SelectTemplate;
 
             MessageBox.Show(
                 "第一步：框选模板区域\n" +
@@ -200,7 +200,7 @@ namespace 发票
                 MessageBoxIcon.Information);
         }
 
-        private void button1_Click_1(object sender, EventArgs e)
+        private void DeleteTemplateButton_Click(object sender, EventArgs e)
         {
             if (dataGridView1.SelectedRows.Count == 0)
             {
@@ -213,7 +213,7 @@ namespace 发票
             var selectedIndices = new List<int>();
             foreach (DataGridViewRow row in dataGridView1.SelectedRows)
             {
-                if (row.Index >= 0 && row.Index < templates.Count)
+                if (row.Index >= 0 && row.Index < _templateInfos.Count)
                     selectedIndices.Add(row.Index);
             }
 
@@ -235,25 +235,25 @@ namespace 发票
             foreach (int index in selectedIndices)
             {
                 // 释放图片资源
-                templates[index].Image?.Dispose();
-                templates[index].TemplateImage?.Dispose();
+                _templateInfos[index].Image?.Dispose();
+                _templateInfos[index].TemplateImage?.Dispose();
 
                 // 先删数据源，再删表格行
-                templates.RemoveAt(index);
+                _templateInfos.RemoveAt(index);
                 dataGridView1.Rows.RemoveAt(index);
             }
 
             // 刷新显示
-            zoomBox?.Invalidate();
+            _zoomImageBox?.Invalidate();
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            if (keyData == Keys.Escape && currentMode != SelectMode.None)
+            if (keyData == Keys.Escape && _currentSelectMode != SelectMode.None)
             {
-                currentMode = SelectMode.None;
-                currentTemplate = null;
-                zoomBox.ClearHighlight();
+                _currentSelectMode = SelectMode.None;
+                _currentTemplate = null;
+                _zoomImageBox.ClearHighlight();
                 MessageBox.Show("已取消选择", "提示");
                 return true;
             }
@@ -263,30 +263,30 @@ namespace 发票
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             base.OnFormClosing(e);
-            foreach (var template in templates)
+            foreach (var template in _templateInfos)
             {
                 template.Image?.Dispose();
                 template.TemplateImage?.Dispose();
             }
-            templates.Clear();
+            _templateInfos.Clear();
         }
 
-        private void SaveMode_Click(object sender, EventArgs e)
+        private void SaveTemplateButton_Click(object sender, EventArgs e)
         {
-            if (templates.Count == 0)
+            if (_templateInfos.Count == 0)
             {
                 MessageBox.Show("没有模板可保存！", "提示");
                 return;
             }
 
-            string baseDir = Path.Combine(TemplatePath, FileName);
+            string baseDir = Path.Combine(_templatePath, _fileName);
             Directory.CreateDirectory(baseDir);
 
             var config = new TemplateConfig();
 
-            for (int i = 0; i < templates.Count; i++)
+            for (int i = 0; i < _templateInfos.Count; i++)
             {
-                var tpl = templates[i];
+                var tpl = _templateInfos[i];
 
                 if (tpl.TemplateImage == null)
                 {
@@ -326,7 +326,7 @@ namespace 发票
                 });
             }
 
-            string configPath = Path.Combine(baseDir, $"{FileName}.json");
+            string configPath = Path.Combine(baseDir, $"{_fileName}.json");
 
             var options = new JsonSerializerOptions
             {
@@ -355,8 +355,8 @@ namespace 发票
         }
         private void MakeModes_Load(object sender, EventArgs e)
         {
-            string baseDir = Path.Combine(TemplatePath, FileName);
-            string configPath = Path.Combine(baseDir, $"{FileName}.json");
+            string baseDir = Path.Combine(_templatePath, _fileName);
+            string configPath = Path.Combine(baseDir, $"{_fileName}.json");
 
             if (!File.Exists(configPath))
             {
@@ -376,12 +376,12 @@ namespace 发票
                 var config = JsonSerializer.Deserialize<TemplateConfig>(json, options);
 
                 // 清空现有（释放旧资源）
-                foreach (var t in templates)
+                foreach (var t in _templateInfos)
                 {
                     t.Image?.Dispose();
                     t.TemplateImage?.Dispose();
                 }
-                templates.Clear();
+                _templateInfos.Clear();
                 dataGridView1.Rows.Clear();
 
                 // 加载
@@ -407,7 +407,7 @@ namespace 发票
                         ROI = item.ROI
                     };
 
-                    templates.Add(tpl);
+                    _templateInfos.Add(tpl);
 
                     int rowIndex = dataGridView1.Rows.Add();
                     dataGridView1.Rows[rowIndex].Cells["Column1"].Value = tpl.Image;
@@ -416,7 +416,7 @@ namespace 发票
                     dataGridView1.Rows[rowIndex].Height = 100;
                 }
 
-                MessageBox.Show($"加载成功！\n共 {templates.Count} 个模板", "提示");
+                MessageBox.Show($"加载成功！\n共 {_templateInfos.Count} 个模板", "提示");
             }
             catch (Exception ex)
             {

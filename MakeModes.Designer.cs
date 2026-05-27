@@ -54,7 +54,7 @@
             add.TabIndex = 1;
             add.Text = "添加模板";
             add.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            add.Click += add_Click;
+            add.Click += AddTemplateButton_Click;
             // 
             // button1
             // 
@@ -66,7 +66,7 @@
             button1.TabIndex = 3;
             button1.Text = "删除模板";
             button1.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            button1.Click += button1_Click_1;
+            button1.Click += DeleteTemplateButton_Click;
             // 
             // dataGridView1
             // 
@@ -167,7 +167,7 @@
             SaveMode.TabIndex = 6;
             SaveMode.Text = "保存";
             SaveMode.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            SaveMode.Click += SaveMode_Click;
+            SaveMode.Click += SaveTemplateButton_Click;
             // 
             // MakeModes
             // 

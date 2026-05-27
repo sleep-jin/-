@@ -162,7 +162,7 @@
             InputExcel.TabIndex = 18;
             InputExcel.Text = "导入表格";
             InputExcel.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            InputExcel.Click += InputExcel_Click;
+            InputExcel.Click += ImportExcelButton_Click;
             // 
             // button3
             // 
@@ -175,7 +175,7 @@
             button3.TabIndex = 20;
             button3.Text = "选择表格";
             button3.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            button3.Click += button3_Click;
+            button3.Click += SelectExcelFileButton_Click;
             // 
             // textBox4
             // 
